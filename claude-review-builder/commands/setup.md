@@ -299,7 +299,8 @@ gh api graphql -f query='
       }
     }
   }
-' -f owner="{owner}" -f repo="{repo}" -F pr={pr_number}
+' -f owner="{owner}" -f repo="{repo}" -F pr={pr_number} \
+  --jq '.data.repository.pullRequest.reviewThreads'
 \`\`\`
 
 **Pagination check:** If `pageInfo.hasNextPage` is true, add a warning in the summary.
@@ -683,11 +684,20 @@ Processing comment X of Y [Inline Review Comment]
 **Fix (inline):**
 1. Apply code change
 2. Post reply: "Fixed in latest commit. [Automated reply]"
-3. Resolve thread via GraphQL
+3. Resolve thread via GraphQL:
+   \`\`\`bash
+   gh api graphql -f query='
+     mutation($threadId: ID!) {
+       resolveReviewThread(input: {threadId: $threadId}) {
+         thread { id isResolved }
+       }
+     }
+   ' -f threadId="$thread_id"
+   \`\`\`
 
 **Resolve (inline):**
 1. Post reply with reason
-2. Resolve thread via GraphQL
+2. Resolve thread via GraphQL (same mutation as above)
 
 **Fix/Acknowledge (general):**
 1. Apply changes if needed
@@ -913,11 +923,10 @@ jobs:
           fetch-depth: 0
 
       - name: Run Claude Code Review
-        id: claude
+        id: claude-code-review
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
           prompt: |
             Review PR #${{ github.event.pull_request.number }} in ${{ github.repository }}.
 
