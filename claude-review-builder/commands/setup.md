@@ -933,7 +933,7 @@ jobs:
             Execute /review-pr-ci ${{ github.event.pull_request.number }}
 
           claude_args: |
-            --allowed-tools "Bash(gh api:*),Bash(gh issue view:*),Bash(gh search:*),Bash(gh issue list:*),Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*),Bash(gh repo view:*),mcp__github_inline_comment__create_inline_comment,Read,Grep,Glob"
+            --model claude-opus-4-5 --allowed-tools "Bash(gh api:*),Bash(gh issue view:*),Bash(gh search:*),Bash(gh issue list:*),Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*),Bash(gh repo view:*),mcp__github_inline_comment__create_inline_comment,Read,Grep,Glob"
 ```
 
 ### 4.6: Create Template Guideline at `{GUIDELINE_PATH}`
