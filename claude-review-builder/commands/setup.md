@@ -6,6 +6,75 @@ description: Set up Claude Code review infrastructure in the current repository.
 
 This command sets up intelligent code review infrastructure for your repository.
 
+## Step 0: Check Existing Setup
+
+First, check if Claude Code review infrastructure already exists:
+
+```bash
+ls -la .claude/commands/review-pr-ci.md .github/workflows/code-review.yml 2>/dev/null
+```
+
+**Build a status report:**
+
+| File | Status |
+|------|--------|
+| `.claude/commands/review-pr-ci.md` | ✅ Exists / ❌ Missing |
+| `.claude/commands/resolve-pr-comments.md` | ✅ Exists / ❌ Missing |
+| `.claude/commands/review-and-fix.md` | ✅ Exists / ❌ Missing |
+| `.claude/prompts/review-pr.md` | ✅ Exists / ❌ Missing |
+| `.github/workflows/code-review.yml` | ✅ Exists / ❌ Missing |
+
+**If ALL core files exist** (review-pr-ci.md AND code-review.yml):
+
+Show status and ask user:
+
+```
+Claude Code review is already set up in this repository.
+
+Existing files:
+- .claude/commands/review-pr-ci.md ✅
+- .claude/commands/resolve-pr-comments.md ✅
+- .claude/commands/review-and-fix.md ✅
+- .claude/prompts/review-pr.md ✅
+- .github/workflows/code-review.yml ✅
+
+What would you like to do?
+```
+
+**Options:**
+- **Exit** - Keep existing setup, no changes
+- **Update** - Overwrite all files with latest templates
+- **Show diff** - Compare existing files with templates
+
+**If user selects Exit:** Stop here with message "No changes made."
+
+**If user selects Show diff:** Read each existing file and show differences from templates, then ask again.
+
+**If user selects Update:** Continue to Step 1 (will overwrite files).
+
+**If SOME files are missing:**
+
+Show what exists vs missing:
+
+```
+Partial Claude Code review setup detected.
+
+Existing:
+- .claude/commands/review-pr-ci.md ✅
+
+Missing:
+- .claude/commands/resolve-pr-comments.md ❌
+- .github/workflows/code-review.yml ❌
+
+Proceeding will create missing files and update existing ones.
+```
+
+Then continue to Step 1.
+
+**If NO files exist:** Continue to Step 1 (fresh setup).
+
+---
+
 ## Step 1: Gather Information
 
 First, ask the user for the code review guideline path using `AskUserQuestion`:

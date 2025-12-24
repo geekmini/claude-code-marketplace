@@ -34,9 +34,23 @@ Navigate to your repository and run:
 ```
 
 The command will:
-1. Ask where to place your code review guideline
-2. Create all necessary files
-3. Create a PR with the changes
+1. **Detect existing setup** - Check if code review is already configured
+2. Ask where to place your code review guideline
+3. Create all necessary files
+4. Create a PR with the changes
+
+### Already Set Up?
+
+If code review is already configured, you'll see:
+
+```
+Claude Code review is already set up in this repository.
+
+What would you like to do?
+- Exit - Keep existing setup
+- Update - Overwrite with latest templates
+- Show diff - Compare existing vs templates
+```
 
 ## What Gets Created
 
