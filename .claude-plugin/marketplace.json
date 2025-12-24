@@ -9,6 +9,16 @@
       "name": "code-review",
       "source": "./claude-review-builder",
       "description": "Set up intelligent Claude Code review infrastructure with semantic deduplication"
+    },
+    {
+      "name": "code-review-action-builder",
+      "source": "./code-review-action-builder",
+      "description": "Set up skill-based Claude Code review infrastructure with semantic deduplication and modular design",
+      "skills": [
+        "./skills/review-pr-ci",
+        "./skills/resolve-pr-comments",
+        "./skills/review-and-fix"
+      ]
     }
   ]
 }
