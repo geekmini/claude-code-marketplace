@@ -1,0 +1,12 @@
+{
+  "name": "code-review",
+  "description": "Set up intelligent Claude Code review infrastructure with semantic deduplication, smart comment management, and GitHub integration",
+  "version": "1.0.0",
+  "author": {
+    "name": "Heidi Health",
+    "url": "https://github.com/oscerai"
+  },
+  "repository": "https://github.com/oscerai/claude-review-builder",
+  "license": "MIT",
+  "keywords": ["code-review", "github", "ci", "automation"]
+}
