@@ -1,0 +1,14 @@
+{
+  "name": "heidi-plugins",
+  "owner": {
+    "name": "Heidi Health",
+    "url": "https://github.com/oscerai"
+  },
+  "plugins": [
+    {
+      "name": "code-review",
+      "source": "./claude-review-builder",
+      "description": "Set up intelligent Claude Code review infrastructure with semantic deduplication"
+    }
+  ]
+}
