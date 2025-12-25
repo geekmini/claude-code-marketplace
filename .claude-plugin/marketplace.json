@@ -14,6 +14,33 @@
         "./skills/resolve-pr-comments",
         "./skills/review-and-fix"
       ]
+    },
+    {
+      "name": "dev-flow",
+      "source": "./dev-flow",
+      "description": "Guided 6-phase feature development workflow with session management, parallel agents, and convention detection",
+      "commands": [
+        "./commands/dev",
+        "./commands/resume",
+        "./commands/status"
+      ],
+      "skills": [
+        "./skills/discovery",
+        "./skills/planning",
+        "./skills/specification",
+        "./skills/implementation",
+        "./skills/review",
+        "./skills/delivery",
+        "./skills/swagger",
+        "./skills/postman"
+      ],
+      "agents": [
+        "./agents/code-explorer",
+        "./agents/code-architect",
+        "./agents/code-reviewer",
+        "./agents/code-implementer",
+        "./agents/test-implementer"
+      ]
     }
   ]
 }
