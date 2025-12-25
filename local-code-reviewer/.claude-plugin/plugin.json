@@ -1,0 +1,12 @@
+{
+  "name": "local-code-reviewer",
+  "version": "1.0.0",
+  "description": "Local code review skills for pre-PR review and PR comment resolution. Uses same criteria as github-pr-reviewer for consistency.",
+  "author": {
+    "name": "GeekMini",
+    "url": "https://github.com/geekmini"
+  },
+  "repository": "https://github.com/geekmini/claude-plugins/tree/main/local-code-reviewer",
+  "license": "MIT",
+  "keywords": ["code-review", "local", "pre-pr", "pr-comments"]
+}

@@ -8,6 +8,7 @@ Automated PR code review for GitHub Actions with semantic deduplication and inli
 - **Semantic Deduplication**: Won't repeat existing comments on subsequent pushes
 - **Summary Comment**: Overview with suggestions table and review stats
 - **Smart Classification**: Separates critical issues from minor suggestions
+- **Custom Guidelines**: Use your own review guideline file
 
 ## Installation
 
@@ -68,6 +69,15 @@ jobs:
             --model claude-sonnet-4-20250514
 ```
 
+### Custom Guideline Path
+
+By default, the skill reads guidelines from `docs/codeReviewGuideline.md`. To use a custom path:
+
+```yaml
+          prompt: |
+            Review this PR using the review-pr-ci skill with guideline at .github/CODE_REVIEW.md
+```
+
 ### Required Secrets
 
 Add to your repository (Settings > Secrets and variables > Actions):
@@ -125,25 +135,27 @@ This prevents comment spam on subsequent pushes.
 
 ## Customizing Review Standards
 
-Add a `CLAUDE.md` file to your repository root with project-specific guidelines:
+Create a guideline file at `docs/codeReviewGuideline.md` (or custom path):
 
 ```markdown
-# Project Standards
+# Code Review Guidelines
 
-## Code Style
-- Use TypeScript strict mode
-- Prefer functional components
+## Critical Issues (Must Fix)
+- Bugs that will cause failures
+- Security vulnerabilities
+- Architectural violations
 
-## Architecture
-- Follow hexagonal architecture
-- Keep business logic in domain layer
+## Suggestions (Nice to Have)
+- Style inconsistencies
+- Alternative approaches
 
-## Testing
-- Minimum 80% coverage for new code
-- Integration tests for API endpoints
+## Focus Areas
+- Error handling
+- Performance
+- Security
 ```
 
-The reviewer will use these guidelines when evaluating code.
+The reviewer reads this file and uses it to evaluate code changes. You can also add a `CLAUDE.md` at repo root for general project standards.
 
 ## Troubleshooting
 

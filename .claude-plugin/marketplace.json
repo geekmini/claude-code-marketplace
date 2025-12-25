@@ -11,6 +11,11 @@
       "description": "Automated PR code review for GitHub Actions with semantic deduplication and inline comments"
     },
     {
+      "name": "local-code-reviewer",
+      "source": "./local-code-reviewer",
+      "description": "Local code review skills for pre-PR review and PR comment resolution. Same criteria as github-pr-reviewer for consistency."
+    },
+    {
       "name": "dev-flow",
       "source": "./dev-flow",
       "description": "Guided 6-phase feature development workflow with session management, parallel agents, and convention detection",

@@ -53,10 +53,17 @@ gh repo view --json owner,name --jq '"\(.owner.login)/\(.name)"'
 
 ## Phase 1: Code Review Analysis
 
-### Step 1.1: Gather Context
+### Step 1.1: Read Guideline
 
-1. Reference `CLAUDE.md` for project standards (if exists)
-2. Check for any `.github/CODE_REVIEW.md` or similar guidelines
+Parse guideline path from prompt. Default: `docs/codeReviewGuideline.md`
+
+```bash
+# Check if guideline file exists
+cat docs/codeReviewGuideline.md 2>/dev/null || echo "No guideline file found"
+```
+
+If guideline file exists, use it as primary review criteria.
+Also reference `CLAUDE.md` for project standards (if exists).
 
 ### Step 1.2: Execute Review
 

@@ -16,13 +16,22 @@ echo "GITHUB_ACTIONS=$GITHUB_ACTIONS"
 
 If not in GitHub Actions, inform user this skill is designed for CI automation.
 
+## Guideline Path
+
+Accept optional guideline path in prompt. Default: `docs/codeReviewGuideline.md`
+
+Example prompts:
+- `Review this PR` (uses default guideline path)
+- `Review this PR with guideline at .github/REVIEW.md`
+
 ## Quick Workflow
 
-1. Get PR context via `gh pr view` and `gh pr diff`
+1. Read guideline from specified path (default: `docs/codeReviewGuideline.md`)
 2. Read `CLAUDE.md` for project standards (if exists)
-3. Classify issues: CRITICAL (inline) vs SUGGESTIONS (summary)
-4. Deduplicate against existing unresolved comments
-5. Post inline comments and summary
+3. Get PR context via `gh pr view` and `gh pr diff`
+4. Classify issues: CRITICAL (inline) vs SUGGESTIONS (summary)
+5. Deduplicate against existing unresolved comments
+6. Post inline comments and summary
 
 ## Issue Classification
 
