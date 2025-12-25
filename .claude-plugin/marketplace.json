@@ -16,6 +16,11 @@
       "description": "Local code review skills for pre-PR review and PR comment resolution. Same criteria as github-pr-reviewer for consistency."
     },
     {
+      "name": "ci-test-fixer",
+      "source": "./ci-test-fixer",
+      "description": "Fix failing CI tests and coverage issues from GitHub Actions, then commit and push"
+    },
+    {
       "name": "dev-flow",
       "source": "./dev-flow",
       "description": "Guided 6-phase feature development workflow with session management, parallel agents, and convention detection",
