@@ -1,0 +1,12 @@
+{
+  "name": "github-pr-reviewer",
+  "version": "1.0.0",
+  "description": "Automated PR code review for GitHub Actions with semantic deduplication and inline comments",
+  "author": {
+    "name": "GeekMini",
+    "url": "https://github.com/geekmini"
+  },
+  "repository": "https://github.com/geekmini/claude-plugins/tree/main/github-pr-reviewer",
+  "license": "MIT",
+  "keywords": ["code-review", "github-actions", "ci", "pull-request", "automation"]
+}
