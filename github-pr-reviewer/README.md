@@ -59,14 +59,11 @@ jobs:
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          plugin_marketplaces: |
-            geekmini/claude-code-marketplace
-          plugins: |
-            github-pr-reviewer@geekmini-claude-code-plugins
-          prompt: |
-            Review this PR using the review-pr-ci skill.
+          plugin_marketplaces: geekmini/claude-code-marketplace
+          plugins: github-pr-reviewer@geekmini-claude-code-plugins
+          prompt: Review this PR using the review-pr-ci skill.
           claude_args: |
-            --model claude-sonnet-4-20250514
+            --model claude-opus-4-5 --allowed-tools "Skill,Bash(gh api:*),Bash(gh issue view:*),Bash(gh search:*),Bash(gh issue list:*),Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*),Bash(gh repo view:*),mcp__github_inline_comment__create_inline_comment,Read,Grep,Glob"
 ```
 
 ### Custom Guideline Path
