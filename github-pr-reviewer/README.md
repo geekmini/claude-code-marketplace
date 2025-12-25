@@ -5,9 +5,9 @@ Automated PR code review for GitHub Actions with semantic deduplication and inli
 ## Features
 
 - **Inline Comments**: Posts critical issues directly on relevant code lines
-- **Semantic Deduplication**: Won't repeat existing comments on subsequent pushes
-- **Summary Comment**: Overview with suggestions table and review stats
-- **Smart Classification**: Separates critical issues from minor suggestions
+- **State-Based Deduplication**: Tracks posted issues in summary, prevents duplicates across pushes
+- **Summary Comment**: Overview with nits table, review stats, and hidden state metadata
+- **Smart Classification**: Critical/Suggestions get inline comments, Nits go to summary only
 - **Custom Guidelines**: Use your own review guideline file
 
 ## Installation
@@ -100,35 +100,44 @@ Add to your repository (Settings > Secrets and variables > Actions):
 1. Developer opens or updates a pull request
 2. GitHub Actions workflow triggers
 3. Claude Code runs with the `review-pr-ci` skill
-4. Reviews diff against code quality standards
-5. Posts inline comments for critical issues
-6. Posts summary comment with suggestions
+4. **Fetches existing summary to read INLINE_STATE** (deduplication state)
+5. Reviews diff against code quality standards
+6. Compares findings against state - skips already-posted issues
+7. Posts NEW inline comments for critical issues and suggestions
+8. Updates summary comment with nits and new INLINE_STATE
 
 ## Issue Classification
 
-**Critical Issues** (posted as inline comments):
+**Critical Issues** (inline comments):
 - Bugs that will cause failures
 - Security vulnerabilities
 - Code health degradation
 - Architectural violations
 
-**Suggestions** (summary table only):
+**Suggestions** (inline comments):
+- Performance issues
+- Maintainability concerns
+- Missing error handling
+- Actionable improvements
+
+**Nits** (summary table only - no inline comments):
 - Style inconsistencies
 - Alternative approaches
 - Educational comments
 - Optional refactoring
 
-## Semantic Deduplication
+## State-Based Deduplication
 
-The plugin intelligently avoids duplicate comments:
+The plugin uses the summary comment as persistent state to avoid duplicate comments across pushes:
 
-1. Checks existing unresolved comments on the PR
-2. Compares new issues against existing ones
-3. Skips if semantically similar issue already exists
-4. Updates if issue has evolved
+1. Fetches existing summary comment (titled `## claude-code-review-summary`)
+2. Parses hidden `INLINE_STATE` metadata containing all previously posted issues
+3. Generates a hash for each new finding (based on path + issue description)
+4. Compares against state - skips if issue already posted (even if line numbers changed)
 5. Posts only genuinely new issues
+6. Updates summary with new state
 
-This prevents comment spam on subsequent pushes.
+This prevents comment spam even when line numbers drift between pushes.
 
 ## Customizing Review Standards
 

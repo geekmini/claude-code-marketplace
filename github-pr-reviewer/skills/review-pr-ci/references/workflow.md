@@ -80,26 +80,62 @@ Also reference `CLAUDE.md` for project standards (if exists).
 - Architectural violations
 - Tech stack anti-patterns
 
-**SUGGESTIONS** (summary only):
+**SUGGESTIONS** (inline comments):
+- Performance issues
+- Maintainability concerns
+- Missing error handling
+- Actionable improvements
+
+**NITS** (summary table only - NO inline comments):
 - Style inconsistencies
 - Alternative approaches
 - Educational comments
 - Optional refactoring
+- Naming preferences
 
-Store: `critical_issues` and `suggestions` arrays.
+Store: `critical_issues`, `suggestions`, and `nits` arrays.
 
 ---
 
-## Phase 2: State Discovery
+## Phase 2: State Discovery (Summary-Based)
 
-### Step 2.1: Fetch Existing Bot Comments
+### Step 2.1: Fetch Existing Summary (CRITICAL - DO THIS FIRST)
 
 ```bash
-gh api repos/{owner}/{repo}/pulls/{pr_number}/comments \
-  --jq '[.[] | select(.user.login == "github-actions[bot]" or .user.login == "claude[bot]") | {id, path, line, original_line, body}]'
+gh api repos/{owner}/{repo}/issues/{pr_number}/comments \
+  --jq '[.[] | select((.user.login == "github-actions[bot]" or .user.login == "claude[bot]") and (.body | contains("## claude-code-review-summary"))) | {id, body}] | first'
 ```
 
-### Step 2.2: Fetch Thread Resolution Status
+**Parse the result:**
+- If result is `null` or empty → No existing summary, `INLINE_STATE = []`
+- If result has a body → Extract `INLINE_STATE` from the hidden comment block
+
+### Step 2.2: Parse INLINE_STATE from Summary
+
+If summary exists, extract the JSON between `INLINE_STATE_START` and `INLINE_STATE_END`:
+
+```
+The summary body contains:
+<!-- INLINE_STATE_START
+[{"path":"src/foo.ts","issueHash":"abc123","line":42,"commentId":123456},...]
+INLINE_STATE_END -->
+```
+
+Parse this JSON array into `existing_issues` list. Each entry has:
+- `path`: file path
+- `issueHash`: MD5/short hash of the issue description (first 8 chars)
+- `line`: line number when posted (for reference only, not for matching)
+- `commentId`: GitHub comment ID (for potential updates)
+
+**If no INLINE_STATE block found or parsing fails:** `existing_issues = []`
+
+### Step 2.3: Get PR Diff Files
+
+```bash
+gh pr diff {pr_number} --name-only
+```
+
+### Step 2.4: Fetch Resolved Threads (Optional Cleanup)
 
 ```bash
 gh api graphql -f query='
@@ -107,161 +143,221 @@ gh api graphql -f query='
     repository(owner: $owner, name: $repo) {
       pullRequest(number: $pr) {
         reviewThreads(first: 100) {
-          pageInfo { hasNextPage }
           nodes {
-            id
             isResolved
             comments(first: 1) {
-              nodes {
-                databaseId
-                path
-                line
-              }
+              nodes { databaseId path }
             }
           }
         }
       }
     }
   }
-' -f owner="{owner}" -f repo="{repo}" -F pr={pr_number} \
-  --jq '.data.repository.pullRequest.reviewThreads'
+' -f owner="{owner}" -f repo="{repo}" -F pr={pr_number}
 ```
 
-Build mapping: `comment_databaseId → {thread_id, isResolved}`
-
-### Step 2.3: Filter to Unresolved
-
-Keep comments where thread has `isResolved: false` or no thread found.
-
-### Step 2.4: Get PR Diff Files
-
-```bash
-gh pr diff {pr_number} --name-only
-```
+Use this to identify resolved threads for cleanup from state.
 
 ---
 
-## Phase 3: Semantic Deduplication (MANDATORY)
+## Phase 3: State-Based Deduplication (MANDATORY)
 
-### Step 3.1: Find Comments at Same Location
+### Step 3.1: Generate Issue Hash for Each Finding
 
-For each critical issue at `{path, line}`:
+For each critical issue or suggestion, generate a unique hash:
 
-1. Find unresolved comments where:
-   - Same `path` AND
-   - `line` or `original_line` within ±5 lines
+```
+issueHash = first 8 characters of MD5(path + ":" + normalized_issue_description)
+```
 
-2. No matches → `POST_NEW`
-3. Matches found → Step 3.2
+**Normalize issue description:**
+- Lowercase
+- Remove line numbers from description
+- Remove extra whitespace
+- Keep only the core issue (e.g., "missing null check", "potential sql injection")
 
-### Step 3.2: Semantic Similarity Check
+Example:
+- Path: `src/auth.ts`
+- Issue: "Missing null check on user input"
+- Normalized: `src/auth.ts:missing null check on user input`
+- Hash: `a1b2c3d4`
 
-Compare existing comment body with new issue:
-- Same underlying code problem?
-- Would fixing one fix the other?
-- Same anti-pattern/bug, different wording?
+### Step 3.2: Compare Against Existing State
 
-**Decision:**
-- SIMILAR → `SKIP`
-- EVOLVED → `UPDATE`
-- DIFFERENT → `POST_NEW`
+For each new finding with `{path, issueHash}`:
+
+1. Search `existing_issues` (from Phase 2) for matching `path` AND `issueHash`
+2. If match found → `SKIP` (already posted, even if line changed)
+3. If no match → `POST_NEW`
+
+**Important:** Do NOT compare by line number. Line numbers drift between pushes.
 
 ### Step 3.3: Output Decision Table (MANDATORY)
 
 ```
 Deduplication Analysis:
-| New Issue | Line | Existing Comment | Line | Match   | Decision |
-| --------- | ---- | ---------------- | ---- | ------- | -------- |
-| Issue A   | 26   | "Similar..."     | 24   | SIMILAR | SKIP     |
-| Issue B   | 43   | (none)           | -    | -       | POST_NEW |
+| New Issue | Path | Hash | Existing | Decision |
+| --------- | ---- | ---- | -------- | -------- |
+| null check | src/auth.ts | a1b2c3d4 | YES | SKIP |
+| sql inject | src/db.ts | e5f6g7h8 | NO | POST_NEW |
+```
+
+### Step 3.4: Build Post Queue
+
+Create `to_post` array containing only `POST_NEW` decisions:
+```json
+[{"path": "src/db.ts", "line": 42, "issueHash": "e5f6g7h8", "body": "...", "severity": "CRITICAL"}]
 ```
 
 ---
 
 ## Phase 4: Comment Reconciliation
 
-### Step 4.1: Post New Issues
+### Step 4.1: Post New Issues and Track IDs
 
-For `POST_NEW` decisions, use the MCP tool:
-```
-mcp__github_inline_comment__create_inline_comment
-```
+For each item in `to_post` queue, post and capture the comment ID:
 
-### Step 4.2: Update Evolved Issues
-
-For `UPDATE` decisions:
 ```bash
-gh api repos/{owner}/{repo}/pulls/comments/{id} -X PATCH -f body="<updated>"
+# Post inline comment and capture response
+response=$(gh api repos/{owner}/{repo}/pulls/{pr_number}/comments \
+  -X POST \
+  -f body="**{severity}**: {issue_description}" \
+  -f commit_id="{commit_sha}" \
+  -f path="{path}" \
+  -F line={line} \
+  -f side="RIGHT")
+
+# Extract comment ID from response
+comment_id=$(echo "$response" | jq '.id')
 ```
 
-### Step 4.3: Skip Duplicates
+**Track each posted comment:**
+```json
+{"path": "src/db.ts", "issueHash": "e5f6g7h8", "line": 42, "commentId": 123456}
+```
 
-Log: "Skipped duplicate: {path}:{line}"
+Add to `new_posted_issues` array.
+
+### Step 4.2: Merge State
+
+Combine existing state with newly posted:
+```
+final_state = existing_issues + new_posted_issues
+```
+
+Remove entries for:
+- Files no longer in diff (orphaned)
+- Threads that were resolved by user
+
+### Step 4.3: Log Actions
+
+```
+Posted: {n} new inline comments
+Skipped: {n} duplicates (already in state)
+Removed: {n} orphaned/resolved from state
+```
 
 ---
 
-## Phase 5: State Synchronization
+## Phase 5: Optional Cleanup
 
-### Step 5.1: Notify Fixed Issues
+### Step 5.1: Notify Fixed Issues (Optional)
 
-For each fixed issue (not in current findings):
+If an issue in `existing_issues` is no longer detected in current findings AND the file still exists in diff:
 ```bash
 gh api repos/{owner}/{repo}/pulls/{pr_number}/comments \
   -X POST \
-  -f body="This issue appears to be addressed. Please verify and resolve this thread." \
+  -f body="✅ This issue appears to be addressed. Please verify and resolve this thread." \
   -F in_reply_to={comment_id}
 ```
 
 **Do NOT auto-resolve** - user verifies.
 
-### Step 5.2: Delete Orphaned Comments
+### Step 5.2: Orphan Handling
 
-For comments on files no longer in diff:
+For issues where the file is no longer in diff:
+- Remove from `final_state` (done in Phase 4.2)
+- Optionally delete the comment:
 ```bash
 gh api repos/{owner}/{repo}/pulls/comments/{id} -X DELETE
 ```
 
 ---
 
-## Phase 6: Summary Comment
+## Phase 6: Summary Comment (STRICT: ONE SUMMARY ONLY)
 
-### Step 6.1: Find Existing Summary
+**CRITICAL RULE: There must be exactly ONE summary comment per PR. The summary contains the INLINE_STATE that tracks all posted comments.**
 
-```bash
-gh api repos/{owner}/{repo}/issues/{pr_number}/comments \
-  --jq '[.[] | select((.user.login == "github-actions[bot]" or .user.login == "claude[bot]") and (.body | contains("## Code Review Summary"))) | .id] | first'
-```
+### Step 6.1: Use Summary ID from Phase 2
 
-### Step 6.2: Update or Create
+You already fetched the existing summary in Phase 2.1. Use that `id` if it exists.
 
-**Format:**
+- If `existing_summary_id` exists → UPDATE (PATCH)
+- If no existing summary → CREATE (POST)
+
+### Step 6.2: Build Summary Content with INLINE_STATE
+
+**The summary MUST include the hidden INLINE_STATE block:**
 
 ```markdown
-## Code Review Summary
+## claude-code-review-summary
+
+<!-- INLINE_STATE_START
+[{"path":"src/auth.ts","issueHash":"a1b2c3d4","line":42,"commentId":123456},{"path":"src/db.ts","issueHash":"e5f6g7h8","line":87,"commentId":789012}]
+INLINE_STATE_END -->
 
 ### Overview
-<Brief description>
+<Brief description of changes reviewed>
 
-### Critical Issues
-**{N} critical issue(s) posted as inline comments.**
+### Inline Comments
+**{N} issue(s) posted as inline comments** ({critical} critical, {suggestions} suggestions).
 
-### Suggestions
+| Severity | File | Line | Issue |
+| -------- | ---- | ---- | ----- |
+| CRITICAL | `src/auth.ts` | 42 | Missing null check |
+| SUGGESTION | `src/db.ts` | 87 | Consider parameterized query |
 
-| File   | Line | Issue       |
-| ------ | ---- | ----------- |
-| `path` | 42   | Description |
+### Nits (Minor Issues)
+
+| File | Line | Issue |
+| ---- | ---- | ----- |
+| `src/utils.ts` | 15 | Consider using const |
+
+*These are minor style/preference items - address if you have time.*
 
 ### What's Good
-<Positive aspects>
+<Positive aspects - be specific>
 
-### Review Actions
-- Critical posted: {n}
+### Review Stats
+- New comments posted: {n}
 - Duplicates skipped: {n}
-- Fixed notified: {n}
-- Orphans deleted: {n}
+- Total tracked issues: {n}
 
 ---
-Generated with [Claude Code](https://claude.com/claude-code)
+*Generated with [Claude Code](https://claude.com/claude-code)*
+```
+
+### Step 6.3: Post or Update Summary
+
+**IF existing summary found:**
+```bash
+gh api repos/{owner}/{repo}/issues/comments/{existing_summary_id} \
+  -X PATCH \
+  -f body="<summary content with INLINE_STATE>"
+```
+
+**ONLY IF no existing summary:**
+```bash
+gh api repos/{owner}/{repo}/issues/{pr_number}/comments \
+  -X POST \
+  -f body="<summary content with INLINE_STATE>"
+```
+
+### Step 6.4: Verify (MANDATORY)
+
+After posting/updating, verify the INLINE_STATE is correctly saved:
+```bash
+gh api repos/{owner}/{repo}/issues/comments/{summary_id} --jq '.body' | grep -o 'INLINE_STATE_START.*INLINE_STATE_END'
 ```
 
 ---
@@ -269,7 +365,10 @@ Generated with [Claude Code](https://claude.com/claude-code)
 ## Constraints
 
 - CI-only: Designed for CI environment
-- Critical issues only as inline comments
-- Semantic deduplication is MANDATORY
+- Critical and Suggestions as inline comments
+- Nits go to summary table ONLY (no inline comments for nits)
+- **State-based deduplication is MANDATORY** - compare by path + issueHash, NOT line numbers
 - Do NOT auto-resolve threads
-- One summary comment per PR
+- **ONE SUMMARY COMMENT PER PR** - This is a STRICT rule. ALWAYS update existing summary, NEVER create duplicates
+- **Summary title MUST be `## claude-code-review-summary`** - this is used for detection
+- **INLINE_STATE block is MANDATORY** - this tracks all posted inline comments across CI runs

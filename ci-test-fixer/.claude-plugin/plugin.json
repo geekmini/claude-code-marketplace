@@ -1,0 +1,12 @@
+{
+  "name": "ci-test-fixer",
+  "version": "1.0.0",
+  "description": "Fix failing CI tests and coverage issues from GitHub Actions, then commit and push",
+  "author": {
+    "name": "GeekMini",
+    "url": "https://github.com/geekmini"
+  },
+  "repository": "https://github.com/geekmini/claude-plugins/tree/main/ci-test-fixer",
+  "license": "MIT",
+  "keywords": ["ci", "tests", "github-actions", "codecov", "automation"]
+}
