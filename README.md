@@ -23,5 +23,5 @@ Install the recommended skill-based reviewer:
 Run the setup command in any repository to configure the review infrastructure:
 
 ```bash
-/code-review-action-builder
+/code-review-action-builder:setup
 ```
