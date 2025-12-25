@@ -194,14 +194,14 @@ Update `.dev-flow-session.json` before archiving:
 
 Follow conventional commits:
 
-| Type | Description |
-|------|-------------|
-| `feat` | New feature |
-| `fix` | Bug fix |
-| `docs` | Documentation only |
+| Type       | Description                                         |
+| ---------- | --------------------------------------------------- |
+| `feat`     | New feature                                         |
+| `fix`      | Bug fix                                             |
+| `docs`     | Documentation only                                  |
 | `refactor` | Code change that neither fixes bug nor adds feature |
-| `test` | Adding or updating tests |
-| `chore` | Maintenance tasks |
+| `test`     | Adding or updating tests                            |
+| `chore`    | Maintenance tasks                                   |
 
 ## Standalone Usage
 

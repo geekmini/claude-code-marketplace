@@ -6,14 +6,14 @@
   },
   "plugins": [
     {
-      "name": "code-review-action-builder",
-      "source": "./code-review-action-builder",
-      "description": "Set up skill-based Claude Code review infrastructure with semantic deduplication and modular design",
-      "skills": [
-        "./skills/review-pr-ci",
-        "./skills/resolve-pr-comments",
-        "./skills/review-and-fix"
-      ]
+      "name": "github-pr-reviewer",
+      "source": "./github-pr-reviewer",
+      "description": "Automated PR code review for GitHub Actions with semantic deduplication and inline comments"
+    },
+    {
+      "name": "local-code-reviewer",
+      "source": "./local-code-reviewer",
+      "description": "Local code review skills for pre-PR review and PR comment resolution. Same criteria as github-pr-reviewer for consistency."
     },
     {
       "name": "dev-flow",

@@ -14,19 +14,19 @@ Follow these conventions for consistent, informative commit messages.
 
 ### Type (Required)
 
-| Type | Description | Example |
-|------|-------------|---------|
-| `feat` | New feature | `feat: add user profile endpoint` |
-| `fix` | Bug fix | `fix: handle null user in auth` |
-| `docs` | Documentation | `docs: update API reference` |
-| `style` | Formatting | `style: fix indentation` |
+| Type       | Description      | Example                              |
+| ---------- | ---------------- | ------------------------------------ |
+| `feat`     | New feature      | `feat: add user profile endpoint`    |
+| `fix`      | Bug fix          | `fix: handle null user in auth`      |
+| `docs`     | Documentation    | `docs: update API reference`         |
+| `style`    | Formatting       | `style: fix indentation`             |
 | `refactor` | Code restructure | `refactor: extract validation logic` |
-| `perf` | Performance | `perf: optimize database query` |
-| `test` | Tests | `test: add user service tests` |
-| `build` | Build system | `build: update webpack config` |
-| `ci` | CI/CD | `ci: add deployment workflow` |
-| `chore` | Maintenance | `chore: update dependencies` |
-| `revert` | Revert commit | `revert: revert "feat: add X"` |
+| `perf`     | Performance      | `perf: optimize database query`      |
+| `test`     | Tests            | `test: add user service tests`       |
+| `build`    | Build system     | `build: update webpack config`       |
+| `ci`       | CI/CD            | `ci: add deployment workflow`        |
+| `chore`    | Maintenance      | `chore: update dependencies`         |
+| `revert`   | Revert commit    | `revert: revert "feat: add X"`       |
 
 ### Scope (Optional)
 
@@ -245,11 +245,11 @@ git config commit.gpgsign true
 
 ## Branch Naming
 
-| Type | Pattern | Example |
-|------|---------|---------|
-| Feature | `feat/[name]` | `feat/user-avatars` |
-| Fix | `fix/[name]` | `fix/auth-timeout` |
-| Docs | `docs/[name]` | `docs/api-reference` |
+| Type     | Pattern           | Example                |
+| -------- | ----------------- | ---------------------- |
+| Feature  | `feat/[name]`     | `feat/user-avatars`    |
+| Fix      | `fix/[name]`      | `fix/auth-timeout`     |
+| Docs     | `docs/[name]`     | `docs/api-reference`   |
 | Refactor | `refactor/[name]` | `refactor/auth-module` |
 
 Use kebab-case for branch names.

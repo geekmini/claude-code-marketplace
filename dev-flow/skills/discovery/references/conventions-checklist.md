@@ -6,14 +6,14 @@ Use this checklist when exploring a codebase to identify patterns and convention
 
 Check for these files first:
 
-| File | Purpose |
-|------|---------|
-| `CLAUDE.md` | Project guidelines, architecture, conventions |
-| `AGENTS.md` | Custom agent definitions |
-| `README.md` | Project overview, setup instructions |
-| `CONTRIBUTING.md` | Contribution guidelines |
-| `.editorconfig` | Code style settings |
-| `tsconfig.json` / `pyproject.toml` | Language configuration |
+| File                               | Purpose                                       |
+| ---------------------------------- | --------------------------------------------- |
+| `CLAUDE.md`                        | Project guidelines, architecture, conventions |
+| `AGENTS.md`                        | Custom agent definitions                      |
+| `README.md`                        | Project overview, setup instructions          |
+| `CONTRIBUTING.md`                  | Contribution guidelines                       |
+| `.editorconfig`                    | Code style settings                           |
+| `tsconfig.json` / `pyproject.toml` | Language configuration                        |
 
 ## Architecture Style
 
@@ -30,28 +30,28 @@ Identify the architectural pattern:
 
 ### Files and Directories
 
-| Convention | Example |
-|------------|---------|
+| Convention | Example           |
+| ---------- | ----------------- |
 | kebab-case | `user-service.ts` |
 | snake_case | `user_service.py` |
-| camelCase | `userService.js` |
-| PascalCase | `UserService.cs` |
+| camelCase  | `userService.js`  |
+| PascalCase | `UserService.cs`  |
 
 ### Functions and Methods
 
-| Convention | Example |
-|------------|---------|
-| camelCase | `getUserById()` |
+| Convention | Example            |
+| ---------- | ------------------ |
+| camelCase  | `getUserById()`    |
 | snake_case | `get_user_by_id()` |
-| PascalCase | `GetUserById()` |
+| PascalCase | `GetUserById()`    |
 
 ### Classes and Types
 
-| Convention | Example |
-|------------|---------|
-| PascalCase | `UserRepository` |
-| Interface prefix | `IUserRepository` |
-| Type suffix | `UserType`, `UserDTO` |
+| Convention       | Example               |
+| ---------------- | --------------------- |
+| PascalCase       | `UserRepository`      |
+| Interface prefix | `IUserRepository`     |
+| Type suffix      | `UserType`, `UserDTO` |
 
 ## Testing Patterns
 

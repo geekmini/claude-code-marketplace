@@ -8,31 +8,24 @@ $ARGUMENTS
 
 ## PR Number Resolution
 
-Parse arguments for a PR number. If not provided, auto-detect from current branch:
-
-**If PR number provided in arguments:**
+**If PR number in arguments:**
 ```bash
 gh pr view <PR_NUMBER> --json number,title --jq '"\(.number)|\(.title)"'
 ```
 
-**If no PR number provided:**
-1. Get current branch:
-   ```bash
-   git branch --show-current
-   ```
+**If no PR number:**
+```bash
+git branch --show-current
+gh pr view --json number,title --jq '"\(.number)|\(.title)"'
+```
 
-2. Find PR for current branch:
-   ```bash
-   gh pr view --json number,title --jq '"\(.number)|\(.title)"'
-   ```
-
-**If no PR found, show error:**
+**If no PR found:**
 ```
 Error: No PR found for current branch.
 
 Usage:
-  /resolve-pr-comments        # Auto-detect PR from branch
-  /resolve-pr-comments 123    # Resolve comments on PR #123
+  resolve-pr-comments        # Auto-detect from branch
+  resolve-pr-comments 123    # PR #123
 ```
 
 ## Repository Info
@@ -41,16 +34,30 @@ Usage:
 gh repo view --json owner,name --jq '"\(.owner.login)/\(.name)"'
 ```
 
-## Phase 1: Fetch All PR Comments
+---
 
-### Step 1: Fetch Inline Review Comments
+## Phase 1: Read Guideline
+
+Parse guideline path from prompt. Default: `docs/codeReviewGuideline.md`
+
+```bash
+cat docs/codeReviewGuideline.md 2>/dev/null || echo "No guideline file found"
+```
+
+Use guideline to evaluate if reviewer feedback aligns with project standards.
+
+---
+
+## Phase 2: Fetch All PR Comments
+
+### Step 2.1: Inline Review Comments
 
 ```bash
 gh api repos/{owner}/{repo}/pulls/{pr_number}/comments \
   --jq '[.[] | {id, path, line, original_line, body, user: .user.login, in_reply_to_id, created_at, comment_type: "inline"}]'
 ```
 
-### Step 2: Fetch Review Threads
+### Step 2.2: Review Threads
 
 ```bash
 gh api graphql -f query='
@@ -79,41 +86,38 @@ gh api graphql -f query='
 ' -f owner="{owner}" -f repo="{repo}" -F pr={pr_number}
 ```
 
-### Step 2.5: Build Thread Mapping and Filter to Unresolved
+### Step 2.3: Filter to Unresolved
 
-1. Build mapping from `comment_databaseId → thread_id`
-2. Skip comments whose thread has `isResolved: true`
-3. Store `thread_id` for use when resolving
+1. Build mapping: `comment_databaseId -> thread_id`
+2. Skip comments where thread `isResolved: true`
+3. Store `thread_id` for resolving later
 
-### Step 3: Fetch General PR Comments
+### Step 2.4: General PR Comments
 
 ```bash
 gh api repos/{owner}/{repo}/issues/{pr_number}/comments \
   --jq '[.[] | {id, body, user: .user.login, created_at, comment_type: "general"}]'
 ```
 
-### Processing Order
-
-1. **First**: Process unresolved inline review comments
-2. **Last**: Process general PR comments
+**Processing order:** Inline first, then general.
 
 **If no unresolved comments:**
 ```
 No unresolved review comments found on PR #{pr_number}!
 ```
 
-## Phase 2: Interactive Resolution Loop
+---
 
-For each comment:
+## Phase 3: Interactive Resolution Loop
 
-### Step 1: Analysis
+### Step 3.1: Analysis
 
-1. **Relevance Check:** Is this comment actionable?
+1. **Relevance Check:** Is this actionable?
 2. **Severity Assessment:** Blocker / Major / Minor / Questionable
+3. **Guideline Alignment:** Does feedback match project standards?
 
-### Step 2: Presentation
+### Step 3.2: Presentation
 
-**For inline comments:**
 ```
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 Processing comment X of Y [Inline Review Comment]
@@ -128,24 +132,24 @@ Processing comment X of Y [Inline Review Comment]
 [Show proposed code change]
 ```
 
-### Step 3: User Decision
+### Step 3.3: User Decision
 
-**For inline comments - Options:**
-- **Fix** - Apply code change and reply
-- **Skip** - Move to next without changes
-- **Resolve** - Mark resolved without code changes
+**Inline comments:**
+- Fix - Apply change and reply
+- Skip - Move to next
+- Resolve - Mark resolved with reason
 
-**For general comments - Options:**
-- **Fix** - Apply code changes and reply
-- **Skip** - Move to next without changes
-- **Acknowledge** - Reply with explanation
+**General comments:**
+- Fix - Apply changes and reply
+- Skip - Move to next
+- Acknowledge - Reply with explanation
 
 ### Handling Choices
 
 **Fix (inline):**
 1. Apply code change
-2. Post reply: "Fixed in latest commit. [Automated reply]"
-3. Resolve thread via GraphQL:
+2. Post reply: "Fixed in latest commit."
+3. Resolve thread:
    ```bash
    gh api graphql -f query='
      mutation($threadId: ID!) {
@@ -158,7 +162,7 @@ Processing comment X of Y [Inline Review Comment]
 
 **Resolve (inline):**
 1. Post reply with reason
-2. Resolve thread via GraphQL (same mutation as above)
+2. Resolve thread (same mutation)
 
 **Fix/Acknowledge (general):**
 1. Apply changes if needed
@@ -167,26 +171,31 @@ Processing comment X of Y [Inline Review Comment]
 ### Progress Tracking
 
 ```
-Progress: X of Y comments processed (F fixed, S skipped, R resolved, A acknowledged)
+Progress: X of Y comments (F fixed, S skipped, R resolved, A acknowledged)
 ```
 
-## Phase 3: Commit Changes
+---
 
-**If code changes made:**
+## Phase 4: Commit Changes
+
+**If changes made:**
 ```bash
 git add -A
 git commit -m "fix: address PR review feedback"
 ```
 
-## Phase 4: Final Options
+---
 
-**Options:**
+## Phase 5: Final Options
+
 - **Push** - Push commit to remote
 - **Done** - Exit without pushing
+
+---
 
 ## Constraints
 
 - Process comments one by one
-- Always post replies before resolving threads
+- Post replies before resolving threads
 - Do NOT modify other users' comments
 - Show clear progress indicators

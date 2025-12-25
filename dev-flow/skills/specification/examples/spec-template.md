@@ -32,12 +32,12 @@ Explicitly out of scope for this iteration:
 
 ### [Primary Entity]
 
-| Field | Type | Required | Default | Description |
-|-------|------|----------|---------|-------------|
-| id | UUID | Yes | auto | Primary key |
-| created_at | DateTime | Yes | now() | Creation timestamp |
-| updated_at | DateTime | Yes | now() | Last update timestamp |
-| [field_name] | [type] | [Yes/No] | [value] | [description] |
+| Field        | Type     | Required | Default | Description           |
+| ------------ | -------- | -------- | ------- | --------------------- |
+| id           | UUID     | Yes      | auto    | Primary key           |
+| created_at   | DateTime | Yes      | now()   | Creation timestamp    |
+| updated_at   | DateTime | Yes      | now()   | Last update timestamp |
+| [field_name] | [type]   | [Yes/No] | [value] | [description]         |
 
 **Constraints**:
 - [Constraint 1]
@@ -97,12 +97,12 @@ Authorization: Bearer <token>
 
 **Error Responses**:
 
-| Status | Code | Description |
-|--------|------|-------------|
-| 400 | VALIDATION_ERROR | Invalid request body |
-| 401 | UNAUTHORIZED | Missing or invalid token |
-| 403 | FORBIDDEN | Insufficient permissions |
-| 409 | CONFLICT | Resource already exists |
+| Status | Code             | Description              |
+| ------ | ---------------- | ------------------------ |
+| 400    | VALIDATION_ERROR | Invalid request body     |
+| 401    | UNAUTHORIZED     | Missing or invalid token |
+| 403    | FORBIDDEN        | Insufficient permissions |
+| 409    | CONFLICT         | Resource already exists  |
 
 ---
 
@@ -130,9 +130,9 @@ Authorization: Bearer <token>
 
 **Error Responses**:
 
-| Status | Code | Description |
-|--------|------|-------------|
-| 404 | NOT_FOUND | Resource not found |
+| Status | Code      | Description        |
+| ------ | --------- | ------------------ |
+| 404    | NOT_FOUND | Resource not found |
 
 ---
 
@@ -146,13 +146,13 @@ Authorization: Bearer <token>
 
 **Query Parameters**:
 
-| Parameter | Type | Default | Description |
-|-----------|------|---------|-------------|
-| page | integer | 1 | Page number |
-| limit | integer | 20 | Items per page (max 100) |
-| sort | string | created_at | Sort field |
-| order | string | desc | Sort order (asc/desc) |
-| [filter] | string | - | Filter by [field] |
+| Parameter | Type    | Default    | Description              |
+| --------- | ------- | ---------- | ------------------------ |
+| page      | integer | 1          | Page number              |
+| limit     | integer | 20         | Items per page (max 100) |
+| sort      | string  | created_at | Sort field               |
+| order     | string  | desc       | Sort order (asc/desc)    |
+| [filter]  | string  | -          | Filter by [field]        |
 
 **Response (200 OK)**:
 ```json
@@ -321,9 +321,9 @@ Authorization: Bearer <token>
 
 ## Changelog
 
-| Version | Date | Author | Changes |
-|---------|------|--------|---------|
-| 1.0 | YYYY-MM-DD | [name] | Initial specification |
+| Version | Date       | Author | Changes               |
+| ------- | ---------- | ------ | --------------------- |
+| 1.0     | YYYY-MM-DD | [name] | Initial specification |
 
 ---
 

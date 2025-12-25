@@ -41,14 +41,14 @@ Resuming from [phaseName] phase...
 
 Based on `currentPhase`, continue with the appropriate skill:
 
-| Phase | Skill | Context Needed |
-|-------|-------|----------------|
-| 1 | discovery | None - starting fresh |
-| 2 | planning | Discovery output |
-| 3 | specification | Discovery + Planning output |
-| 4 | implementation | Spec file path, chosen architecture |
-| 5 | review | Implementation files list |
-| 6 | delivery | All prior phase outputs |
+| Phase | Skill          | Context Needed                      |
+| ----- | -------------- | ----------------------------------- |
+| 1     | discovery      | None - starting fresh               |
+| 2     | planning       | Discovery output                    |
+| 3     | specification  | Discovery + Planning output         |
+| 4     | implementation | Spec file path, chosen architecture |
+| 5     | review         | Implementation files list           |
+| 6     | delivery       | All prior phase outputs             |
 
 ## Context Loading
 

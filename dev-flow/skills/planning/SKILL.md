@@ -19,14 +19,14 @@ The planning phase combines two activities:
 
 Based on discovery output, identify gaps in these categories:
 
-| Category | Example Questions |
-|----------|-------------------|
-| **Scope** | What's included/excluded? |
-| **Data Model** | Fields, types, required/optional? |
-| **API Design** | Endpoints, methods, request/response? |
-| **Business Rules** | Validation, constraints, edge cases? |
-| **Authentication** | Public or protected endpoints? |
-| **Error Handling** | What can go wrong, how to handle? |
+| Category           | Example Questions                     |
+| ------------------ | ------------------------------------- |
+| **Scope**          | What's included/excluded?             |
+| **Data Model**     | Fields, types, required/optional?     |
+| **API Design**     | Endpoints, methods, request/response? |
+| **Business Rules** | Validation, constraints, edge cases?  |
+| **Authentication** | Public or protected endpoints?        |
+| **Error Handling** | What can go wrong, how to handle?     |
 
 ### Step 2: Ask Questions One-by-One
 

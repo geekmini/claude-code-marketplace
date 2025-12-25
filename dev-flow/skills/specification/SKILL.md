@@ -55,9 +55,9 @@ Create the spec document with all gathered information:
 
 ### [Entity Name]
 
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| id | UUID | Yes | Primary key |
+| Field   | Type   | Required | Description   |
+| ------- | ------ | -------- | ------------- |
+| id      | UUID   | Yes      | Primary key   |
 | [field] | [type] | [Yes/No] | [description] |
 
 ## API Endpoints
@@ -161,12 +161,12 @@ Update `.dev-flow-session.json`:
 
 ## Spec Lifecycle
 
-| Status | Meaning |
-|--------|---------|
-| Draft | Initial generation, pending review |
-| Approved | User approved, ready for implementation |
-| Implemented | Code complete, tests passing |
-| Merged | PR merged to main branch |
+| Status      | Meaning                                 |
+| ----------- | --------------------------------------- |
+| Draft       | Initial generation, pending review      |
+| Approved    | User approved, ready for implementation |
+| Implemented | Code complete, tests passing            |
+| Merged      | PR merged to main branch                |
 
 ## Standalone Usage
 
