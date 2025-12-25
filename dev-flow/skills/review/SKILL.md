@@ -151,22 +151,22 @@ Update `.dev-flow-session.json`:
 
 ## Confidence Scoring
 
-| Score | Meaning | Action |
-|-------|---------|--------|
-| 0-25 | Likely false positive | Not reported |
-| 26-50 | Might be issue | Not reported |
-| 51-75 | Probably real | Not reported |
-| 76-79 | Likely real | Not reported |
-| 80-100 | Definitely real | **Reported** |
+| Score  | Meaning               | Action       |
+| ------ | --------------------- | ------------ |
+| 0-25   | Likely false positive | Not reported |
+| 26-50  | Might be issue        | Not reported |
+| 51-75  | Probably real         | Not reported |
+| 76-79  | Likely real           | Not reported |
+| 80-100 | Definitely real       | **Reported** |
 
 ## Issue Categories
 
-| Category | Examples |
-|----------|----------|
-| **Bug** | Logic errors, null handling, race conditions |
-| **Security** | Injection, XSS, auth bypass, data exposure |
-| **Convention** | Naming, structure, pattern violations |
-| **Quality** | Duplication, complexity, missing tests |
+| Category       | Examples                                     |
+| -------------- | -------------------------------------------- |
+| **Bug**        | Logic errors, null handling, race conditions |
+| **Security**   | Injection, XSS, auth bypass, data exposure   |
+| **Convention** | Naming, structure, pattern violations        |
+| **Quality**    | Duplication, complexity, missing tests       |
 
 ## Standalone Usage
 

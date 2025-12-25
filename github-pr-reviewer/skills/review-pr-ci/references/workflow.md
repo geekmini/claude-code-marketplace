@@ -170,10 +170,10 @@ Compare existing comment body with new issue:
 
 ```
 Deduplication Analysis:
-| New Issue | Line | Existing Comment | Line | Match | Decision |
-|-----------|------|------------------|------|-------|----------|
-| Issue A   | 26   | "Similar..."     | 24   | SIMILAR | SKIP   |
-| Issue B   | 43   | (none)           | -    | -     | POST_NEW |
+| New Issue | Line | Existing Comment | Line | Match   | Decision |
+| --------- | ---- | ---------------- | ---- | ------- | -------- |
+| Issue A   | 26   | "Similar..."     | 24   | SIMILAR | SKIP     |
+| Issue B   | 43   | (none)           | -    | -       | POST_NEW |
 ```
 
 ---
@@ -247,9 +247,9 @@ gh api repos/{owner}/{repo}/issues/{pr_number}/comments \
 
 ### Suggestions
 
-| File | Line | Issue |
-|------|------|-------|
-| `path` | 42 | Description |
+| File   | Line | Issue       |
+| ------ | ---- | ----------- |
+| `path` | 42   | Description |
 
 ### What's Good
 <Positive aspects>

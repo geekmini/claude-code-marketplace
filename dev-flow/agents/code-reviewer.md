@@ -73,13 +73,13 @@ Review code against project guidelines and best practices, reporting only high-c
 
 **Confidence Scoring:**
 
-| Score | Meaning | Action |
-|-------|---------|--------|
-| 0-25 | False positive | Don't report |
-| 26-50 | Might be issue | Don't report |
-| 51-75 | Likely real | Don't report |
-| 76-79 | Very likely | Don't report |
-| 80-100 | Definitely real | **Report** |
+| Score  | Meaning         | Action       |
+| ------ | --------------- | ------------ |
+| 0-25   | False positive  | Don't report |
+| 26-50  | Might be issue  | Don't report |
+| 51-75  | Likely real     | Don't report |
+| 76-79  | Very likely     | Don't report |
+| 80-100 | Definitely real | **Report**   |
 
 **Output Format:**
 

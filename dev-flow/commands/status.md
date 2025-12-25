@@ -26,14 +26,14 @@ Parse session and display comprehensive status:
 
 ### Phase Progress
 
-| Phase | Name | Status |
-|-------|------|--------|
-| 1 | Discovery | [✅ Completed / ⏳ In Progress / ⬜ Pending] |
-| 2 | Planning | [status] |
-| 3 | Specification | [status] |
-| 4 | Implementation | [status] |
-| 5 | Review | [status] |
-| 6 | Delivery | [status] |
+| Phase | Name           | Status                                    |
+| ----- | -------------- | ----------------------------------------- |
+| 1     | Discovery      | [✅ Completed / ⏳ In Progress / ⬜ Pending] |
+| 2     | Planning       | [status]                                  |
+| 3     | Specification  | [status]                                  |
+| 4     | Implementation | [status]                                  |
+| 5     | Review         | [status]                                  |
+| 6     | Delivery       | [status]                                  |
 
 ### Current Phase: [currentPhase] - [phaseName]
 

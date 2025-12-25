@@ -82,8 +82,8 @@ By default, the skill reads guidelines from `docs/codeReviewGuideline.md`. To us
 
 Add to your repository (Settings > Secrets and variables > Actions):
 
-| Secret | Description |
-|--------|-------------|
+| Secret              | Description            |
+| ------------------- | ---------------------- |
 | `ANTHROPIC_API_KEY` | Your Anthropic API key |
 
 ## How It Works

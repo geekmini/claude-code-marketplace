@@ -17,10 +17,10 @@ This skill:
 
 ## Supported Tools
 
-| Tool | Framework | Command |
-|------|-----------|---------|
-| `swag` | Go (Gin, Echo) | `swag init` |
-| `swagger-cli` | Node.js | `swagger-cli validate` |
+| Tool                | Framework      | Command                      |
+| ------------------- | -------------- | ---------------------------- |
+| `swag`              | Go (Gin, Echo) | `swag init`                  |
+| `swagger-cli`       | Node.js        | `swagger-cli validate`       |
 | `openapi-generator` | Multi-language | `openapi-generator generate` |
 
 ## Process

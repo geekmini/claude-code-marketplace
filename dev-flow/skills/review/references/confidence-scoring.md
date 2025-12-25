@@ -5,13 +5,13 @@ Use these guidelines to assign confidence scores to code review findings. Only i
 ## Scoring Scale
 
 | Score Range | Confidence Level | Report? |
-|-------------|------------------|---------|
-| 90-100 | Certain | Yes |
-| 80-89 | Very likely | Yes |
-| 70-79 | Likely | No |
-| 50-69 | Possible | No |
-| 25-49 | Unlikely | No |
-| 0-24 | False positive | No |
+| ----------- | ---------------- | ------- |
+| 90-100      | Certain          | Yes     |
+| 80-89       | Very likely      | Yes     |
+| 70-79       | Likely           | No      |
+| 50-69       | Possible         | No      |
+| 25-49       | Unlikely         | No      |
+| 0-24        | False positive   | No      |
 
 ## Factors That Increase Confidence
 

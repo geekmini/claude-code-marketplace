@@ -45,11 +45,11 @@ echo $POSTMAN_API_KEY
 
 From the specification, extract:
 
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/api/v1/users` | POST | Create user |
-| `/api/v1/users/:id` | GET | Get user |
-| `/api/v1/users/:id` | PUT | Update user |
+| Endpoint            | Method | Description |
+| ------------------- | ------ | ----------- |
+| `/api/v1/users`     | POST   | Create user |
+| `/api/v1/users/:id` | GET    | Get user    |
+| `/api/v1/users/:id` | PUT    | Update user |
 | `/api/v1/users/:id` | DELETE | Delete user |
 
 ### Step 3: Add to Collection
@@ -94,11 +94,11 @@ Collection: [Project Name]
 
 Add/update environment variables:
 
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `baseUrl` | API base URL | `http://localhost:3000` |
-| `authToken` | JWT token | `{{login.token}}` |
-| `userId` | Current user ID | `{{createUser.id}}` |
+| Variable    | Description     | Example                 |
+| ----------- | --------------- | ----------------------- |
+| `baseUrl`   | API base URL    | `http://localhost:3000` |
+| `authToken` | JWT token       | `{{login.token}}`       |
+| `userId`    | Current user ID | `{{createUser.id}}`     |
 
 ### Step 6: Report Results
 
