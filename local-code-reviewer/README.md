@@ -8,6 +8,7 @@ Local code review skills for pre-PR review and PR comment resolution. Uses same 
 - **resolve-pr-comments**: Address reviewer feedback on existing PRs
 - **Same Criteria**: Uses identical classification as CI for consistency
 - **Custom Guidelines**: Reads your `docs/codeReviewGuideline.md`
+- **Explicit Commands**: `/review` and `/resolve-comments` for direct triggering
 
 ## Installation
 
@@ -55,6 +56,27 @@ Address reviewer feedback on existing PRs.
 - Interactive fix/skip/resolve loop
 - Automatic thread resolution after fixes
 - Commits and optionally pushes
+
+## Commands
+
+### /review
+
+Explicitly trigger local code review.
+
+```bash
+/review                          # Uses default guideline
+/review .github/REVIEW.md        # Custom guideline path
+```
+
+### /resolve-comments
+
+Explicitly trigger PR comment resolution.
+
+```bash
+/resolve-comments                              # Auto-detect PR from branch
+/resolve-comments 123                          # Specific PR number
+/resolve-comments 123 --guideline .github/REVIEW.md  # With custom guideline
+```
 
 ## Guideline File
 

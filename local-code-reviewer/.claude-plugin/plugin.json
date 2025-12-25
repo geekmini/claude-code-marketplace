@@ -1,6 +1,6 @@
 {
   "name": "local-code-reviewer",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Local code review skills for pre-PR review and PR comment resolution. Uses same criteria as github-pr-reviewer for consistency.",
   "author": {
     "name": "GeekMini",
