@@ -1,28 +1,28 @@
 ---
 name: resolve-pr-comments
-description: Resolve GitHub PR review comments interactively. Fetches unresolved comments, helps fix them, posts replies, and resolves threads. Use when a developer wants to address feedback from code reviewers on their pull request.
+description: This skill should be used when addressing feedback from code reviewers on a pull request. Triggers on "resolve PR comments", "address review feedback", "fix reviewer comments", "respond to PR feedback", or when working through unresolved review threads.
 ---
 
 # Resolve PR Comments
 
-Interactively resolve GitHub PR review comments.
+Interactively resolve GitHub PR review comments by fetching unresolved threads, helping fix issues, posting replies, and resolving threads.
 
 ## Quick Workflow
 
-1. **Fetch comments** - Get all unresolved inline and general PR comments
-2. **Present each** - Show comment with file context and severity assessment
-3. **User decides** - Fix, Skip, Resolve, or Acknowledge
-4. **Apply changes** - Make code changes, post replies, resolve threads
-5. **Commit & push** - Stage changes and offer to push
+1. Fetch all unresolved inline and general PR comments
+2. Present each with file context and severity assessment
+3. User decides: Fix, Skip, Resolve, or Acknowledge
+4. Apply changes, post replies, resolve threads
+5. Stage changes and offer to commit/push
 
 ## PR Detection
 
-Auto-detect from current branch or accept PR number as argument:
+Auto-detect from current branch or accept PR number:
 ```bash
 gh pr view --json number,title --jq '"\(.number)|\(.title)"'
 ```
 
-## Comment Processing Order
+## Processing Order
 
 1. **First**: Unresolved inline review comments
 2. **Last**: General PR comments

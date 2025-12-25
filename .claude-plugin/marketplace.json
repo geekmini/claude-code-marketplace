@@ -6,14 +6,9 @@
   },
   "plugins": [
     {
-      "name": "code-review-action-builder",
-      "source": "./code-review-action-builder",
-      "description": "Set up skill-based Claude Code review infrastructure with semantic deduplication and modular design",
-      "skills": [
-        "./skills/review-pr-ci",
-        "./skills/resolve-pr-comments",
-        "./skills/review-and-fix"
-      ]
+      "name": "code-review-github-action-factory",
+      "source": "./code-review-github-action-factory",
+      "description": "Set up intelligent Claude Code review infrastructure with GitHub Actions. Creates skill-based review system with semantic deduplication and smart comment management."
     },
     {
       "name": "dev-flow",

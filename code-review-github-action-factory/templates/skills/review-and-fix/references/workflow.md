@@ -8,16 +8,15 @@ $ARGUMENTS
 
 ## Branch Detection
 
-**If base branch provided in arguments:**
-- Use that as the base branch
+**If base branch in arguments:** Use that.
 
 **If no arguments:**
-1. Get current branch
-2. Detect default base branch:
-   ```bash
-   git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@'
-   ```
-   Fall back to `main` or `master` if that fails.
+```bash
+git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@'
+```
+Fall back to `main` or `master`.
+
+---
 
 ## Phase 1: Execute Review
 
@@ -26,23 +25,29 @@ $ARGUMENTS
 
 Execute:
 ```bash
-git diff --name-only <base_branch>...HEAD
-git diff <base_branch>...HEAD
+git diff --name-only <base>...HEAD
+git diff <base>...HEAD
 ```
 
-## Phase 2: Classify and Sort Issues
+---
+
+## Phase 2: Classify and Sort
 
 **Critical** - Must fix:
 - Bugs, security vulnerabilities
-- Anti-patterns per your guideline
+- Anti-patterns per guideline
 
 **Major** - Strong suggestions:
-- Performance issues, poor maintainability
+- Performance issues
+- Poor maintainability
 
 **Minor** - Nits:
-- Style, naming, alternatives
+- Style, naming
+- Alternatives
 
-**Sort by severity: Critical → Major → Minor**
+**Sort:** Critical → Major → Minor
+
+---
 
 ## Phase 3: Interactive Fix Loop
 
@@ -68,7 +73,7 @@ Processing issue X of Y
 
 **Document** appends to `docs/technical_debt.md`:
 ```markdown
-## [YYYY-MM-DD] Branch: <branch_name>
+## [YYYY-MM-DD] Branch: <branch>
 
 ### <Brief title>
 - **File:** <path>:<line>
@@ -83,9 +88,11 @@ Processing issue X of Y
 Progress: X of Y issues (F fixed, S skipped, D documented)
 ```
 
+---
+
 ## Phase 4: Commit Changes
 
-**If code changes made:**
+**If changes made:**
 ```bash
 git add -A
 git commit -m "fix: address code review feedback
@@ -95,14 +102,17 @@ Resolved:
 "
 ```
 
+---
+
 ## Phase 5: Final Options
 
-**Options:**
 - **Re-review** - Run full review again
 - **Done** - Exit
 
+---
+
 ## Constraints
 
-- Do NOT post GitHub comments (local-only mode)
+- Do NOT post GitHub comments (local-only)
 - Do NOT interact with GitHub API
 - Show clear progress indicators

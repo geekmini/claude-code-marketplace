@@ -1,0 +1,18 @@
+{
+  "name": "code-review-github-action-factory",
+  "version": "1.0.0",
+  "description": "Set up intelligent Claude Code review infrastructure with GitHub Actions. Creates skill-based review system with semantic deduplication and smart comment management.",
+  "author": {
+    "name": "GeekMini",
+    "url": "https://github.com/geekmini"
+  },
+  "repository": "https://github.com/geekmini/claude-plugins/tree/main/code-review-github-action-factory",
+  "license": "MIT",
+  "keywords": [
+    "code-review",
+    "github-actions",
+    "ci",
+    "automation",
+    "pull-request"
+  ]
+}
