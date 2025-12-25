@@ -1,15 +1,10 @@
 {
-  "name": "heidi-plugins",
+  "name": "geekmini-claude-code-plugins",
   "owner": {
-    "name": "Heidi Health",
-    "url": "https://github.com/oscerai"
+    "name": "GeekMini",
+    "url": "https://github.com/geekmini"
   },
   "plugins": [
-    {
-      "name": "code-review",
-      "source": "./claude-review-builder",
-      "description": "Set up intelligent Claude Code review infrastructure with semantic deduplication"
-    },
     {
       "name": "code-review-action-builder",
       "source": "./code-review-action-builder",
