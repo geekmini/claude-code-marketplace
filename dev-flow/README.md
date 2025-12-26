@@ -41,7 +41,7 @@ Start or resume the full 6-phase workflow.
 Features:
 - Session management with JSON state
 - Resume from any phase
-- Parallel implementation agents
+- Sequential code-first implementation (code → tests)
 - Interactive code review
 
 ### `/dev-flow:resume`
@@ -146,11 +146,13 @@ Sessions are stored in `.claude/.dev-flow-session.json` (automatically gitignore
 ### Phase 4: Implementation
 
 - Detects optional tools (swagger, postman)
-- Launches parallel agents:
-  - code-implementer for production code
-  - test-implementer for tests
+- Launches agents sequentially (code-first):
+  1. code-implementer creates production code
+  2. test-implementer writes tests with knowledge of actual implementation
 - Verifies tests pass
 - Optional: regenerates swagger docs
+
+**Why sequential?** Tests can read actual implementation, resulting in higher quality coverage and fewer false failures.
 
 ### Phase 5: Review
 

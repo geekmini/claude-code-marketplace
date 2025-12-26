@@ -1,19 +1,26 @@
 ---
 name: implementation
-description: This skill should be used when the user asks to "implement the feature", "write the code", "create the implementation", "start coding", or mentions "implementation phase". Orchestrates parallel code and test implementation agents.
+description: This skill should be used when the user asks to "implement the feature", "write the code", "create the implementation", "start coding", or mentions "implementation phase". Orchestrates sequential code-first implementation with test agents.
 ---
 
 # Implementation Phase
 
-Execute the implementation plan using parallel agents for code and tests. This phase transforms the specification into working code with comprehensive test coverage.
+Execute the implementation plan using sequential agents: code first, then tests. This approach ensures tests can reference actual implementation for higher quality coverage.
 
 ## Overview
 
 The implementation phase:
-- Launches parallel agents for code and tests
+- Launches code-implementer agent first
+- Then launches test-implementer with knowledge of created files
 - Detects optional tools (swagger, postman)
 - Verifies tests pass before proceeding
 - Tracks all created and modified files
+
+**Why sequential (code → tests)?**
+- Tests can READ actual implementation before being written
+- Catches untestable code immediately
+- Test failures indicate real bugs, not spec mismatches
+- Higher quality test coverage
 
 ## Process
 
@@ -44,11 +51,11 @@ Enable these for this feature?
 
 Update session config accordingly.
 
-### Step 2: Launch Parallel Agents (MANDATORY)
+### Step 2: Launch Code Implementation Agent (FIRST)
 
 **CRITICAL: You MUST use the Task tool to launch subagents. DO NOT implement code directly.**
 
-Before launching agents, read the session file to get context:
+Before launching, read the session file to get context:
 
 ```bash
 cat .claude/.dev-flow-session.json
@@ -62,13 +69,10 @@ Extract these values from the session:
 - `conventions`: from `phases.1_discovery.output.conventions`
 - `checklist`: from `phases.3_specification.output.implementationChecklist`
 
-**Launch BOTH agents in a SINGLE message with TWO parallel Task tool calls:**
-
-**Agent 1: code-implementer**
+**Launch code-implementer agent:**
 ```
 Task tool parameters:
   subagent_type: "dev-flow:code-implementer"
-  run_in_background: true
   prompt: |
     Implement the feature following the specification.
 
@@ -99,18 +103,53 @@ Task tool parameters:
     - All checklist items completed
     - Code compiles without errors
     - No linting errors
+
+    ## Output Required
+    Return a list of:
+    - Files created (with paths)
+    - Files modified (with paths)
 ```
 
-**Agent 2: test-implementer (IN THE SAME MESSAGE)**
+**Wait for completion and collect results:**
+
+Store the agent output:
+- `filesCreated`: list of created file paths
+- `filesModified`: list of modified file paths
+
+Present progress:
+```markdown
+## Code Implementation: ✅ Complete
+
+**Files Created**:
+{list filesCreated}
+
+**Files Modified**:
+{list filesModified}
+
+Proceeding to test implementation...
+```
+
+### Step 3: Launch Test Implementation Agent (AFTER code completes)
+
+**Now launch test-implementer with knowledge of the implementation:**
+
 ```
 Task tool parameters:
   subagent_type: "dev-flow:test-implementer"
-  run_in_background: true
   prompt: |
     Create comprehensive tests for the feature.
 
     ## Specification
     Read the spec file at: {specPath}
+
+    ## Implementation Files (READ THESE FIRST)
+    The following files were just created/modified. Read them to understand the actual implementation:
+
+    Files created:
+    {filesCreated from Step 2}
+
+    Files modified:
+    {filesModified from Step 2}
 
     ## Test Conventions
     - Framework: {conventions.testing}
@@ -121,43 +160,35 @@ Task tool parameters:
     - Integration tests for repository/database
     - API/E2E tests for endpoints
 
-    ## Test Scenarios from Spec
-    {extract test scenarios from spec}
+    ## Instructions
+    1. Read the implementation files first
+    2. Write tests that verify the ACTUAL implementation behavior
+    3. Cover happy paths, edge cases, and error scenarios
+    4. Run tests and report results
 
     ## Done Criteria
-    - All spec requirements have test coverage
-    - Tests include happy path, edge cases, error cases
+    - All implementation files have corresponding tests
+    - Tests cover happy path, edge cases, error cases
     - All tests pass when run
+```
+
+**Wait for completion and collect results:**
+
+```markdown
+## Test Implementation: ✅ Complete
+
+**Test Files Created**:
+{list from agent output}
+
+**Tests Written**: {count}
 ```
 
 **ENFORCEMENT:**
 - Use FULLY QUALIFIED names: `dev-flow:code-implementer`, `dev-flow:test-implementer`
-- Send BOTH Task calls in ONE message (enables true parallelism)
-- DO NOT write implementation code yourself - delegate to agents
+- Run agents SEQUENTIALLY: code first, then tests
+- Pass implementation file list to test agent
+- DO NOT write code yourself - delegate to agents
 - If Task tool fails, report the error - do not fall back to implementing yourself
-
-### Step 3: Wait for Agents and Collect Results
-
-After launching, wait for both agents using TaskOutput:
-
-```
-TaskOutput(task_id: {code_agent_task_id}, block: true)
-TaskOutput(task_id: {test_agent_task_id}, block: true)
-```
-
-Collect and present results:
-
-```markdown
-## Implementation Progress
-
-**Code Implementation**: ✅ Complete
-- Files created: {list from agent output}
-- Files modified: {list from agent output}
-
-**Test Implementation**: ✅ Complete
-- Test files created: {list from agent output}
-- Tests written: {count}
-```
 
 ### Step 4: Verify Tests Pass
 
