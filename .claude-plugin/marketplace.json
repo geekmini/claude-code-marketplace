@@ -46,6 +46,14 @@
         "./agents/code-implementer.md",
         "./agents/test-implementer.md"
       ]
+    },
+    {
+      "name": "airflow-setup",
+      "source": "./airflow-setup",
+      "description": "Setup local Apache Airflow environment with Docker Compose",
+      "skills": [
+        "./skills/setup.md"
+      ]
     }
   ]
 }

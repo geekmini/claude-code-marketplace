@@ -1,0 +1,12 @@
+{
+  "name": "airflow-setup",
+  "version": "1.0.0",
+  "description": "Setup local Apache Airflow environment with Docker Compose",
+  "author": {
+    "name": "GeekMini",
+    "url": "https://github.com/geekmini"
+  },
+  "repository": "https://github.com/geekmini/claude-plugins/tree/main/airflow-setup",
+  "license": "MIT",
+  "keywords": ["airflow", "docker", "docker-compose", "data-engineering", "workflow"]
+}
