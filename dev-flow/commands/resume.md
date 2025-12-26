@@ -9,7 +9,7 @@ Continue the feature development workflow from where it was interrupted.
 ## Session Check
 
 ```bash
-cat .dev-flow-session.json 2>/dev/null || echo "NO_SESSION"
+cat .claude/.dev-flow-session.json 2>/dev/null || echo "NO_SESSION"
 ```
 
 ## If Session Exists

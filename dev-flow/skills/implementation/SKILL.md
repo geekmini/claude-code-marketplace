@@ -44,59 +44,119 @@ Enable these for this feature?
 
 Update session config accordingly.
 
-### Step 2: Launch Parallel Agents
+### Step 2: Launch Parallel Agents (MANDATORY)
 
-Launch both agents simultaneously using the Task tool:
+**CRITICAL: You MUST use the Task tool to launch subagents. DO NOT implement code directly.**
 
-**Agent 1: Code Implementation**
+Before launching agents, read the session file to get context:
+
+```bash
+cat .claude/.dev-flow-session.json
 ```
-Task tool:
-  subagent_type: "code-implementer"
+
+Extract these values from the session:
+- `specPath`: from `phases.3_specification.output.specPath`
+- `chosenOption`: from `phases.2_planning.output.chosenOption`
+- `filesToCreate`: from `phases.2_planning.output.filesToCreate`
+- `filesToModify`: from `phases.2_planning.output.filesToModify`
+- `conventions`: from `phases.1_discovery.output.conventions`
+- `checklist`: from `phases.3_specification.output.implementationChecklist`
+
+**Launch BOTH agents in a SINGLE message with TWO parallel Task tool calls:**
+
+**Agent 1: code-implementer**
+```
+Task tool parameters:
+  subagent_type: "dev-flow:code-implementer"
   run_in_background: true
   prompt: |
     Implement the feature following the specification.
 
-    Spec file: [path to spec]
-    Architecture: [chosen option details]
-    Conventions: [from discovery]
+    ## Specification
+    Read the spec file at: {specPath}
 
-    Create/modify files as specified in the implementation checklist.
-    Follow layer order: models → repository → service → handler → router
+    ## Architecture Decision
+    User chose: {chosenOption}
+
+    Files to create:
+    {filesToCreate as bullet list}
+
+    Files to modify:
+    {filesToModify as bullet list}
+
+    ## Conventions
+    - Architecture: {conventions.architecture}
+    - Naming: {conventions.naming}
+    - Error handling: {conventions.errorHandling}
+
+    ## Implementation Checklist
+    {checklist as numbered list}
+
+    ## Layer Order
+    Implement in this order: models → repository → service → handler → router
+
+    ## Done Criteria
+    - All checklist items completed
+    - Code compiles without errors
+    - No linting errors
 ```
 
-**Agent 2: Test Implementation**
+**Agent 2: test-implementer (IN THE SAME MESSAGE)**
 ```
-Task tool:
-  subagent_type: "test-implementer"
+Task tool parameters:
+  subagent_type: "dev-flow:test-implementer"
   run_in_background: true
   prompt: |
-    Create tests for the feature.
+    Create comprehensive tests for the feature.
 
-    Spec file: [path to spec]
-    Follow project testing conventions: [conventions]
+    ## Specification
+    Read the spec file at: {specPath}
 
-    Create:
-    - Unit tests for service layer
-    - Integration tests for repository
-    - API tests for endpoints
+    ## Test Conventions
+    - Framework: {conventions.testing}
+    - Structure: {conventions.testStructure}
 
-    Run tests after creation and report results.
+    ## Required Tests
+    - Unit tests for service/business logic
+    - Integration tests for repository/database
+    - API/E2E tests for endpoints
+
+    ## Test Scenarios from Spec
+    {extract test scenarios from spec}
+
+    ## Done Criteria
+    - All spec requirements have test coverage
+    - Tests include happy path, edge cases, error cases
+    - All tests pass when run
 ```
 
-### Step 3: Monitor Progress
+**ENFORCEMENT:**
+- Use FULLY QUALIFIED names: `dev-flow:code-implementer`, `dev-flow:test-implementer`
+- Send BOTH Task calls in ONE message (enables true parallelism)
+- DO NOT write implementation code yourself - delegate to agents
+- If Task tool fails, report the error - do not fall back to implementing yourself
 
-Wait for both agents to complete:
+### Step 3: Wait for Agents and Collect Results
+
+After launching, wait for both agents using TaskOutput:
+
+```
+TaskOutput(task_id: {code_agent_task_id}, block: true)
+TaskOutput(task_id: {test_agent_task_id}, block: true)
+```
+
+Collect and present results:
 
 ```markdown
 ## Implementation Progress
 
-**Code Implementation**: [status]
-- Files created: [count]
-- Files modified: [count]
+**Code Implementation**: ✅ Complete
+- Files created: {list from agent output}
+- Files modified: {list from agent output}
 
-**Test Implementation**: [status]
-- Test files created: [count]
-- Tests written: [count]
+**Test Implementation**: ✅ Complete
+- Test files created: {list from agent output}
+- Tests written: {count}
 ```
 
 ### Step 4: Verify Tests Pass
@@ -126,7 +186,7 @@ If `enableSwagger` is true, invoke the swagger skill to regenerate API documenta
 
 ## Session State
 
-Update `.dev-flow-session.json`:
+Update `.claude/.dev-flow-session.json`:
 
 ```json
 {

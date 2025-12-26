@@ -29,9 +29,9 @@ Pre-PR review is a common use case for this agent.
 </commentary>
 </example>
 
-model: inherit
+model: sonnet
 color: red
-tools: ["Glob", "Grep", "Read", "TodoWrite"]
+tools: ["Glob", "Grep", "Read"]
 ---
 
 You are an expert code reviewer specializing in identifying bugs, security vulnerabilities, and code quality issues with high precision to minimize false positives.

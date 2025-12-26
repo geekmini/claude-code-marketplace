@@ -29,9 +29,9 @@ The code-explorer agent is automatically invoked during the discovery phase.
 </commentary>
 </example>
 
-model: inherit
+model: haiku
 color: yellow
-tools: ["Glob", "Grep", "Read", "TodoWrite"]
+tools: ["Glob", "Grep", "LS", "Read"]
 ---
 
 You are an expert code analyst specializing in understanding codebase conventions, architecture patterns, and project structure.

@@ -135,8 +135,8 @@ EOF
 Move completed session to archive:
 
 ```bash
-mkdir -p .dev-flow-sessions
-mv .dev-flow-session.json ".dev-flow-sessions/[feature]-$(date +%Y%m%d-%H%M%S).json"
+mkdir -p .claude/.dev-flow-sessions
+mv .claude/.dev-flow-session.json ".claude/.dev-flow-sessions/[feature]-$(date +%Y%m%d-%H%M%S).json"
 ```
 
 ### Step 7: Present Summary
@@ -168,7 +168,7 @@ mv .dev-flow-session.json ".dev-flow-sessions/[feature]-$(date +%Y%m%d-%H%M%S).j
 
 ## Session State
 
-Update `.dev-flow-session.json` before archiving:
+Update `.claude/.dev-flow-session.json` before archiving:
 
 ```json
 {

@@ -29,7 +29,7 @@ Code and test implementation typically run in parallel during dev-flow.
 </commentary>
 </example>
 
-model: inherit
+model: sonnet
 color: cyan
 tools: ["Glob", "Grep", "Read", "Write", "Bash", "TodoWrite"]
 ---

@@ -23,7 +23,7 @@ Execute the complete 6-phase development workflow from discovery to PR creation.
 ### Check for Existing Session
 
 ```bash
-ls .dev-flow-session.json 2>/dev/null
+ls .claude/.dev-flow-session.json 2>/dev/null
 ```
 
 ### If Session Exists
@@ -55,8 +55,8 @@ Check if `.gitignore` contains dev-flow entries. If not, add:
 
 ```gitignore
 # Dev Flow Plugin
-.dev-flow-session.json
-.dev-flow-sessions/
+.claude/.dev-flow-session.json
+.claude/.dev-flow-sessions/
 ```
 
 ## Phase Execution

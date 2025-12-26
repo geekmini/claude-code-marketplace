@@ -34,8 +34,8 @@ Ask clarifying questions if unclear:
 Use the Task tool to launch the code-explorer agent:
 
 ```
-Task tool:
-  subagent_type: "code-explorer"
+Task tool parameters:
+  subagent_type: "dev-flow:code-explorer"
   prompt: |
     Explore the codebase to understand conventions for implementing: [feature]
 
@@ -43,7 +43,16 @@ Task tool:
     2. Extract architecture style, naming conventions, testing patterns
     3. Find similar features already implemented
     4. Identify patterns to follow
+
+    Output a structured summary with:
+    - Architecture style
+    - Naming conventions
+    - Testing patterns
+    - Similar features found
+    - Key files to reference
 ```
+
+**Note**: Use fully qualified agent name `dev-flow:code-explorer`.
 
 ### Step 3: Present Discovery Summary
 
@@ -79,7 +88,7 @@ Does this capture your intent correctly?
 
 ## Session State
 
-Update `.dev-flow-session.json` with discovery output:
+Update `.claude/.dev-flow-session.json` with discovery output:
 
 ```json
 {

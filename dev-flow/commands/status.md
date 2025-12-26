@@ -9,7 +9,7 @@ Display the current state of the feature development workflow.
 ## Session Check
 
 ```bash
-cat .dev-flow-session.json 2>/dev/null || echo "NO_SESSION"
+cat .claude/.dev-flow-session.json 2>/dev/null || echo "NO_SESSION"
 ```
 
 ## If Session Exists
@@ -94,8 +94,8 @@ Display raw session JSON in formatted code block.
 Archive the session:
 
 ```bash
-mkdir -p .dev-flow-sessions
-mv .dev-flow-session.json ".dev-flow-sessions/[feature]-abandoned-$(date +%Y%m%d-%H%M%S).json"
+mkdir -p .claude/.dev-flow-sessions
+mv .claude/.dev-flow-session.json ".claude/.dev-flow-sessions/[feature]-abandoned-$(date +%Y%m%d-%H%M%S).json"
 ```
 
 Confirm:
@@ -112,7 +112,7 @@ No dev-flow session is currently active.
 
 ### Recent Sessions
 
-[List files in .dev-flow-sessions/ if directory exists]
+[List files in .claude/.dev-flow-sessions/ if directory exists]
 
 ### Start New
 
@@ -122,10 +122,10 @@ To begin feature development:
 
 ## Archived Sessions
 
-If `.dev-flow-sessions/` exists, list recent sessions:
+If `.claude/.dev-flow-sessions/` exists, list recent sessions:
 
 ```bash
-ls -la .dev-flow-sessions/ 2>/dev/null | tail -5
+ls -la .claude/.dev-flow-sessions/ 2>/dev/null | tail -5
 ```
 
 Offer to view or restore archived sessions if any exist.

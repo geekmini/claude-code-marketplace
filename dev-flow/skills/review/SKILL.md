@@ -22,25 +22,34 @@ The review phase:
 Use the Task tool:
 
 ```
-Task tool:
-  subagent_type: "code-reviewer"
+Task tool parameters:
+  subagent_type: "dev-flow:code-reviewer"
   prompt: |
     Review the implementation for: [feature name]
 
-    Files to review:
-    [list from implementation phase]
+    ## Files to Review
+    [list from implementation phase - phases.4_implementation.output.filesCreated]
+    [list from implementation phase - phases.4_implementation.output.filesModified]
 
-    Spec file: [path]
-    Conventions: [from discovery]
+    ## Spec File
+    Read: [phases.3_specification.output.specPath]
 
-    Check for:
+    ## Conventions to Check Against
+    - Architecture: [conventions.architecture]
+    - Naming: [conventions.naming]
+    - Error handling: [conventions.errorHandling]
+
+    ## Review Categories
     - Bugs and logic errors
     - Security vulnerabilities
     - Code quality issues
     - Convention adherence
 
     Only report issues with confidence >= 80%.
+    Provide specific file:line references and fix suggestions.
 ```
+
+**Note**: Use fully qualified agent name `dev-flow:code-reviewer`.
 
 ### Step 2: Present Review Results
 
@@ -120,7 +129,7 @@ On successful review completion:
 
 ## Session State
 
-Update `.dev-flow-session.json`:
+Update `.claude/.dev-flow-session.json`:
 
 ```json
 {

@@ -29,9 +29,9 @@ Comparing implementation options is a core capability of this agent.
 </commentary>
 </example>
 
-model: inherit
+model: sonnet
 color: green
-tools: ["Glob", "Grep", "Read", "TodoWrite"]
+tools: ["Glob", "Grep", "Read"]
 ---
 
 You are a senior software architect who delivers comprehensive, actionable architecture blueprints by deeply understanding codebases and making confident architectural decisions.

@@ -48,25 +48,37 @@ Options (if applicable):
 Use the Task tool:
 
 ```
-Task tool:
-  subagent_type: "code-architect"
+Task tool parameters:
+  subagent_type: "dev-flow:code-architect"
   prompt: |
     Design architecture for: [feature name]
 
-    Context from discovery:
-    [conventions, patterns, similar features]
+    ## Context from Discovery
+    - Architecture: [conventions.architecture]
+    - Naming: [conventions.naming]
+    - Similar features: [list from discovery]
 
-    Requirements from clarification:
-    [data model, endpoints, business rules]
+    ## Requirements from Clarification
+    - Data model: [fields, types, relationships]
+    - Endpoints: [list of endpoints]
+    - Business rules: [list of rules]
 
+    ## Your Task
     Provide 3 implementation approaches:
     - Option A: Minimal changes (fastest, max reuse)
     - Option B: Clean architecture (best design)
     - Option C: Pragmatic balance
 
-    For each: files to create/modify, pros, cons
-    Include a recommendation.
+    For each option include:
+    - Files to create (with purposes)
+    - Files to modify (with changes)
+    - Data flow diagram
+    - Pros and cons
+
+    End with a clear recommendation.
 ```
+
+**Note**: Use fully qualified agent name `dev-flow:code-architect`.
 
 ### Step 4: Present Options
 
@@ -111,7 +123,7 @@ Record the chosen option and rationale.
 
 ## Session State
 
-Update `.dev-flow-session.json`:
+Update `.claude/.dev-flow-session.json`:
 
 ```json
 {

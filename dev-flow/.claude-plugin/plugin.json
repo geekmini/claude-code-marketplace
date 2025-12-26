@@ -1,6 +1,6 @@
 {
   "name": "dev-flow",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Guided 6-phase feature development workflow with session management, parallel agents, and convention detection. Takes features from discovery to PR.",
   "author": {
     "name": "GeekMini",

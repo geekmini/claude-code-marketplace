@@ -140,7 +140,7 @@ On approval, update the spec status:
 
 ## Session State
 
-Update `.dev-flow-session.json`:
+Update `.claude/.dev-flow-session.json`:
 
 ```json
 {
