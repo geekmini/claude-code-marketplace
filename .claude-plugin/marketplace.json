@@ -54,6 +54,21 @@
       "skills": [
         "./skills/setup.md"
       ]
+    },
+    {
+      "name": "claude-md-sync",
+      "source": "./claude-md-sync",
+      "description": "Automatically keeps CLAUDE.md synchronized with project state. Detects project type, analyzes current state, and proposes documentation updates.",
+      "commands": [
+        "./commands/sync-claude-md.md"
+      ],
+      "skills": [
+        "./skills/project-analysis",
+        "./skills/claude-md-authoring"
+      ],
+      "agents": [
+        "./agents/claude-md-updater.md"
+      ]
     }
   ]
 }
