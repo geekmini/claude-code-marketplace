@@ -1,0 +1,9 @@
+{
+  "name": "mem0",
+  "version": "0.1.0",
+  "description": "Global memory layer for Claude Code using self-hosted Mem0 service. Automatically stores and retrieves contextual memories.",
+  "author": {
+    "name": "James",
+    "email": "james@tron.home"
+  }
+}

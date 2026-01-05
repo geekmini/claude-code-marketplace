@@ -1,0 +1,29 @@
+{
+  "description": "Automatic memory storage and retrieval for Claude Code using Mem0",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Based on the user's prompt, search for relevant memories that could help answer their question or provide useful context.\n\n1. Analyze what the user is asking about\n2. Use the search_memory MCP tool to find relevant memories (use a semantic search query based on the user's intent)\n3. If relevant memories are found, return them as a systemMessage in this format:\n\n**Relevant memories:**\n- [memory 1]\n- [memory 2]\n\nIf no relevant memories are found or the query is too generic (like 'hello', 'thanks', etc.), return nothing.\n\nDo NOT search for memories if the user is explicitly asking to save/store something - that will be handled by the Stop hook.",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Analyze this conversation and extract important information worth remembering for future sessions.\n\n**What to save:**\n- User preferences and settings\n- Project-specific facts (IPs, URLs, credentials hints, configurations)\n- Technical decisions and their rationale\n- User's working environment details\n- Important outcomes or solutions found\n\n**What NOT to save:**\n- Generic code examples\n- Temporary debugging steps\n- Information already in project files (like CLAUDE.md)\n- Trivial exchanges (greetings, thanks)\n\n**If there is important information to save:**\n1. Use the add_memory MCP tool to store each distinct piece of information\n2. Format memories as concise facts (e.g., 'User prefers tabs over spaces', 'k3s-server IP is 192.168.31.246')\n3. Return 'approve' to allow stopping\n\n**If nothing worth saving:**\nReturn 'approve' immediately without saving anything.",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}
