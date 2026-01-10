@@ -23,9 +23,10 @@ Persistent memory for Claude Code using [mem0](https://mem0.ai) cloud API. Autom
    /plugin install claude-mem0
    ```
 
-2. Add your mem0 API key to your shell profile (`~/.zshrc` or `~/.bashrc`):
+2. Add environment variables to your shell profile (`~/.zshrc` or `~/.bashrc`):
    ```bash
    export MEM0_API_KEY="m0-your-api-key-here"  # Get from https://app.mem0.ai/dashboard/api-keys
+   export MEM0_USER_ID=$USER                    # Your unique identifier for memories
    ```
 
 3. Reload your shell and restart Claude Code:
@@ -38,8 +39,9 @@ Persistent memory for Claude Code using [mem0](https://mem0.ai) cloud API. Autom
 | Variable | Required | Description |
 |----------|----------|-------------|
 | `MEM0_API_KEY` | Yes | Your mem0 API key from [mem0.ai](https://app.mem0.ai/dashboard/api-keys) |
+| `MEM0_USER_ID` | Yes | Your unique identifier for memories (recommend: `$USER`) |
 
-The `user_id` and `app_id` are automatically provided by hooks on each session and passed to mem0 tools per-call.
+The `app_id` for project-scoped memories is automatically derived from your git remote URL.
 
 ## How It Works
 
@@ -146,7 +148,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 ### No Memories Found
 
 1. Check your `MEM0_API_KEY` is set correctly
-2. Verify the `user_id` matches what was used to store memories (shown in session start message)
+2. Verify your `MEM0_USER_ID` matches what was used to store memories
 3. For project memories, ensure you're in a git repo with a remote
 
 ### Debug Mode
@@ -178,7 +180,6 @@ claude-mem0/
 │   └── mem0-memory/
 │       └── SKILL.md             # Memory best practices
 ├── scripts/
-│   ├── get-user-id.sh           # User identifier utility
 │   └── get-app-id.sh            # Git remote hash utility for app scoping
 └── README.md
 ```
