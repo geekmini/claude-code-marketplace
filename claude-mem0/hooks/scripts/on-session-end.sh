@@ -17,34 +17,51 @@ if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
 fi
 
 # Build prompt with actual IDs embedded
-MESSAGE="# Memory Capture - Session End
-
-Save a brief session summary before ending.
-
-## Required Parameters
-
-- user_id: \"${USER_ID}\"
-- app_id: \"${PROJECT_ID:-none}\" (for project-specific memories)
-
-## What to Capture
-
-Session summary (project-scoped with app_id):
+if [ -n "$PROJECT_ID" ]; then
+  PARAMS_SECTION="- user_id: \"${USER_ID}\"
+- app_id: \"${PROJECT_ID}\" (for project-specific memories)"
+  WHAT_TO_CAPTURE="Session summary (project-scoped WITH app_id):
 - Major tasks completed
 - Key decisions made
 - Problems solved
 
-User updates (global, NO app_id):
+User updates (global, do NOT use app_id):
+- New preferences discovered
+- Updated understanding of user"
+  EXAMPLE_CALL="add_memory(
+  messages=\"Session: Implemented auth system with JWT\",
+  user_id=\"${USER_ID}\",
+  app_id=\"${PROJECT_ID}\"
+)"
+else
+  PARAMS_SECTION="- user_id: \"${USER_ID}\"
+- app_id: NOT AVAILABLE (no git remote - only save global memories)"
+  WHAT_TO_CAPTURE="User updates (global only, do NOT use app_id):
 - New preferences discovered
 - Updated understanding of user
+- Session accomplishments (without project context)"
+  EXAMPLE_CALL="add_memory(
+  messages=\"User completed a debugging session\",
+  user_id=\"${USER_ID}\"
+)"
+fi
+
+MESSAGE="# Memory Capture - Session End
+
+Save a brief session summary before ending.
+
+## Parameters
+
+${PARAMS_SECTION}
+
+## What to Capture
+
+${WHAT_TO_CAPTURE}
 
 ## Example Call
 
 \`\`\`
-add_memory(
-  messages=\"Session: Implemented auth system with JWT, fixed CORS issues\",
-  user_id=\"${USER_ID}\",
-  app_id=\"${PROJECT_ID}\"
-)
+${EXAMPLE_CALL}
 \`\`\`
 
 Save relevant memories, then allow session to end."

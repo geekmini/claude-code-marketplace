@@ -20,17 +20,21 @@ fi
 
 # Build the system message
 if [ -n "$PROJECT_ID" ]; then
-  PROJECT_INSTRUCTION="Use \`search_memories\` with user_id=\"${USER_ID}\" and filter by app_id=\"${PROJECT_ID}\" for project-specific context."
+  PROJECT_INSTRUCTION="Use \`search_memories\` with filters: {\"AND\": [{\"user_id\": \"${USER_ID}\"}, {\"app_id\": \"${PROJECT_ID}\"}]}"
+  IDS_SECTION="- user_id: ${USER_ID}
+- app_id: ${PROJECT_ID}"
 else
-  PROJECT_INSTRUCTION="No git remote found - skip project-specific memory search."
+  PROJECT_INSTRUCTION="No git remote found - skip project-specific memory search (do NOT use app_id filter)."
+  IDS_SECTION="- user_id: ${USER_ID}
+- app_id: NOT AVAILABLE (no git remote)"
 fi
 
 MESSAGE="## Memory Context (claude-mem0)
 
 At the start of this session, retrieve relevant memories to provide personalized context:
 
-1. **Global memories** (user preferences, coding style, general knowledge):
-   Use \`search_memories\` with user_id=\"${USER_ID}\" to find relevant global context.
+1. **Global memories** (user preferences, coding style):
+   Use \`search_memories\` with only user_id=\"${USER_ID}\" (do NOT include app_id - this returns memories without app_id).
 
 2. **Project memories** (architecture, patterns, past decisions):
    ${PROJECT_INSTRUCTION}
@@ -38,8 +42,7 @@ At the start of this session, retrieve relevant memories to provide personalized
 Search for memories relevant to the user's first message. Include key context in your response if found.
 
 **Memory IDs for this session:**
-- user_id: ${USER_ID}
-- project_id: ${PROJECT_ID:-none}"
+${IDS_SECTION}"
 
 # Output as properly escaped JSON using jq
 jq -n --arg msg "$MESSAGE" '{"systemMessage": $msg}'

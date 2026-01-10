@@ -23,8 +23,14 @@ if [ -n "$PROJECT_ID" ]; then
 - Codebase patterns discovered
 - Bug fixes and their root causes
 - Configuration or setup details"
+  PROJECT_EXAMPLE="
+Project memory (for this project only):
+\`\`\`
+add_memory(messages=\"API uses Express with JWT auth\", user_id=\"${USER_ID}\", app_id=\"${PROJECT_ID}\")
+\`\`\`"
 else
-  PROJECT_SECTION="(No git remote - skip project memories)"
+  PROJECT_SECTION="(No git remote detected - only save global memories, do NOT use app_id)"
+  PROJECT_EXAMPLE=""
 fi
 
 MESSAGE="# Memory Capture - Task Completion
@@ -33,7 +39,7 @@ Before completing, save any valuable learnings using \`add_memory\`.
 
 ## Memory Scoping - IMPORTANT
 
-**Global memories** - USE: user_id=\"${USER_ID}\" (NO app_id)
+**Global memories** - USE: user_id=\"${USER_ID}\" (do NOT include app_id)
 - User preferences (coding style, tools)
 - Personal info (name, role, expertise)
 
@@ -41,15 +47,11 @@ ${PROJECT_SECTION}
 
 ## Example Calls
 
-Global memory:
+Global memory (accessible from all projects):
 \`\`\`
 add_memory(messages=\"User prefers TypeScript\", user_id=\"${USER_ID}\")
 \`\`\`
-
-Project memory:
-\`\`\`
-add_memory(messages=\"API uses Express with JWT auth\", user_id=\"${USER_ID}\", app_id=\"${PROJECT_ID}\")
-\`\`\`
+${PROJECT_EXAMPLE}
 
 ## Action
 
