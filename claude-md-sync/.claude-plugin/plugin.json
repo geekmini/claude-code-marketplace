@@ -1,6 +1,6 @@
 {
   "name": "claude-md-sync",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Automatically keeps CLAUDE.md synchronized with project state. Detects project type, analyzes current state, and proposes documentation updates.",
   "author": {
     "name": "GeekMini",
