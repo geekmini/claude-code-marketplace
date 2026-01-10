@@ -19,11 +19,13 @@ Persistent memory for Claude Code using [mem0](https://mem0.ai) cloud API. Autom
 ## Installation
 
 1. Install the plugin:
+
    ```bash
    /plugin install claude-mem0
    ```
 
 2. Add environment variables to your shell profile (`~/.zshrc` or `~/.bashrc`):
+
    ```bash
    export MEM0_API_KEY="m0-your-api-key-here"  # Get from https://app.mem0.ai/dashboard/api-keys
    export MEM0_USER_ID=$USER                    # Your unique identifier for memories
@@ -36,10 +38,10 @@ Persistent memory for Claude Code using [mem0](https://mem0.ai) cloud API. Autom
 
 ## Configuration
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `MEM0_API_KEY` | Yes | Your mem0 API key from [mem0.ai](https://app.mem0.ai/dashboard/api-keys) |
-| `MEM0_USER_ID` | Yes | Your unique identifier for memories (recommend: `$USER`) |
+| Variable       | Required | Description                                                              |
+| -------------- | -------- | ------------------------------------------------------------------------ |
+| `MEM0_API_KEY` | Yes      | Your mem0 API key from [mem0.ai](https://app.mem0.ai/dashboard/api-keys) |
+| `MEM0_USER_ID` | Yes      | Your unique identifier for memories (recommend: `$USER`)                 |
 
 The `app_id` for project-scoped memories is automatically derived from your git remote URL.
 
@@ -47,20 +49,20 @@ The `app_id` for project-scoped memories is automatically derived from your git 
 
 ### Memory Scoping
 
-| Scope | Identifier | Use Case |
-|-------|------------|----------|
-| **Global** | `user_id` only | User preferences, coding style, personal info |
+| Scope       | Identifier           | Use Case                                           |
+| ----------- | -------------------- | -------------------------------------------------- |
+| **Global**  | `user_id` only       | User preferences, coding style, personal info      |
 | **Project** | `user_id` + `app_id` | Architecture, patterns, project-specific knowledge |
 
 App ID is automatically derived from your git remote URL (SHA-256 hash), ensuring consistent identification across clones.
 
 ### Automatic Hooks
 
-| Hook | Trigger | Action |
-|------|---------|--------|
+| Hook             | Trigger        | Action                               |
+| ---------------- | -------------- | ------------------------------------ |
 | **SessionStart** | Session begins | Search and surface relevant memories |
-| **Stop** | Task completes | Prompt to capture learnings |
-| **SessionEnd** | Session ends | Prompt to capture session summary |
+| **Stop**         | Task completes | Prompt to capture learnings          |
+| **SessionEnd**   | Session ends   | Prompt to capture session summary    |
 
 ### MCP Tools
 
@@ -78,26 +80,29 @@ The plugin configures the official [mem0-mcp-server](https://github.com/mem0ai/m
 
 ### What to Remember
 
-| Type | Examples | Scope |
-|------|----------|-------|
-| **Global** | Coding style, preferred tools, personal info | All projects |
-| **Project** | Architecture, tech stack, design decisions | This repo only |
+| Type        | Examples                                     | Scope          |
+| ----------- | -------------------------------------------- | -------------- |
+| **Global**  | Coding style, preferred tools, personal info | All projects   |
+| **Project** | Architecture, tech stack, design decisions   | This repo only |
 
 ### Saving Memories
 
 **Global memory** (no app_id - accessible everywhere):
+
 ```
 "记住我喜欢用 2 空格缩进"
 "Remember I prefer dark mode in all editors"
 ```
 
 **Project memory** (with app_id - only in this repo):
+
 ```
 "记住这个项目使用 React 18 + TypeScript"
 "Remember this API uses JWT authentication"
 ```
 
 Claude automatically determines the type based on content. To be explicit:
+
 ```
 "保存为全局记忆：我喜欢简洁的代码注释"
 "保存为项目记忆：数据库使用 PostgreSQL 15"
@@ -122,6 +127,7 @@ Claude automatically determines the type based on content. To be explicit:
 ### How Claude Decides
 
 Claude chooses memory type based on content:
+
 - User preferences, personal info → **Global**
 - Architecture, codebase patterns → **Project**
 
@@ -139,6 +145,7 @@ If info is available via other tools (e.g., `git remote`), Claude may use those 
 ### MCP Server Not Starting
 
 Ensure `uvx` is available:
+
 ```bash
 which uvx
 # If not found, install uv:
@@ -154,11 +161,13 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 ### Debug Mode
 
 Run Claude Code with debug output:
+
 ```bash
 claude --debug
 ```
 
 Look for:
+
 - MCP server initialization
 - Hook execution
 - Memory tool calls
