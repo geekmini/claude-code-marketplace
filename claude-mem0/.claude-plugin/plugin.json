@@ -1,6 +1,6 @@
 {
   "name": "claude-mem0",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Persistent memory for Claude Code using mem0 cloud API. Automatically captures and retrieves global user-level and project-level memories.",
   "author": {
     "name": "GeekMini",
