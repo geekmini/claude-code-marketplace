@@ -18,8 +18,9 @@
         "matcher": "*",
         "hooks": [
           {
-            "type": "prompt",
-            "prompt_file": "${CLAUDE_PLUGIN_ROOT}/hooks/prompts/on-stop.md"
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/on-stop.sh",
+            "timeout": 30
           }
         ]
       }
@@ -29,8 +30,9 @@
         "matcher": "*",
         "hooks": [
           {
-            "type": "prompt",
-            "prompt_file": "${CLAUDE_PLUGIN_ROOT}/hooks/prompts/on-session-end.md"
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/on-session-end.sh",
+            "timeout": 30
           }
         ]
       }
