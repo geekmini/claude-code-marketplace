@@ -28,7 +28,7 @@ Persistent memory for Claude Code using [mem0](https://mem0.ai) cloud API. Autom
    # Required: mem0 API key (get from https://app.mem0.ai/dashboard/api-keys)
    export MEM0_API_KEY="m0-your-api-key-here"
 
-   # Required: Your unique user identifier for memories
+   # Optional: Your unique user identifier (defaults to $USER)
    export MEM0_USER_ID="your-username"
    ```
 
@@ -44,7 +44,7 @@ All configuration is done via environment variables:
 | Variable | Required | Description | Default |
 |----------|----------|-------------|---------|
 | `MEM0_API_KEY` | Yes | Your mem0 API key | - |
-| `MEM0_USER_ID` | Yes | Your unique identifier for memories | `$USER` |
+| `MEM0_USER_ID` | No | Your unique identifier for memories | `$USER` |
 
 ## How It Works
 
