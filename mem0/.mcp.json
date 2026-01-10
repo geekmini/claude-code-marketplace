@@ -1,8 +1,0 @@
-{
-  "mcpServers": {
-    "mem0": {
-      "type": "sse",
-      "url": "https://mem0-mcp.tron.home/sse"
-    }
-  }
-}
