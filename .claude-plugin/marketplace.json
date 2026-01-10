@@ -71,9 +71,12 @@
       ]
     },
     {
-      "name": "mem0",
-      "source": "./mem0",
-      "description": "Global memory layer for Claude Code using self-hosted Mem0. Automatically stores and retrieves contextual memories across sessions via semantic search."
+      "name": "claude-mem0",
+      "source": "./claude-mem0",
+      "description": "Persistent memory for Claude Code using mem0 cloud API. Automatic global and project-level memory with semantic search.",
+      "skills": [
+        "./skills/mem0-memory"
+      ]
     }
   ]
 }
