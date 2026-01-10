@@ -60,9 +60,18 @@ App ID is automatically derived from your git remote URL (SHA-256 hash), ensurin
 
 | Hook             | Trigger        | Action                               |
 | ---------------- | -------------- | ------------------------------------ |
+| **PreToolUse**   | mem0 MCP call  | Auto-fix app_id/agent_id usage       |
 | **SessionStart** | Session begins | Search and surface relevant memories |
 | **Stop**         | Task completes | Prompt to capture learnings          |
 | **SessionEnd**   | Session ends   | Prompt to capture session summary    |
+
+#### Auto-Fix for Project Memory Scoping
+
+The `PreToolUse` hook automatically validates and corrects mem0 tool calls:
+
+- **Fixes `agent_id` → `app_id`**: If `agent_id` is used instead of `app_id`, it's corrected
+- **Fixes repo name → hash**: If `app_id` contains a repo name instead of the 16-char hash, it's corrected
+- **Non-git directories**: Removes `app_id` entirely (memory stored globally)
 
 ### MCP Tools
 
@@ -182,6 +191,7 @@ claude-mem0/
 ├── hooks/
 │   ├── hooks.json               # Hook configuration
 │   └── scripts/
+│       ├── validate-mem0-call.sh # Auto-fix app_id/agent_id on mem0 calls
 │       ├── on-session-start.sh  # Memory retrieval at session start
 │       ├── on-stop.sh           # Memory capture on task completion
 │       └── on-session-end.sh    # Memory capture on session end

@@ -8,6 +8,29 @@ version: 0.1.0
 
 Guidance for effectively using mem0 memory tools to provide personalized, context-aware assistance across sessions.
 
+## CRITICAL: Project Memory Scoping Rules
+
+**For project-scoped memories, you MUST follow these rules:**
+
+1. **ALWAYS use `app_id`** for project-scoped memories - NEVER use `agent_id`
+2. **Use the exact hash value** provided in the session start message (e.g., `app_id="abc123def456..."`)
+3. **NEVER derive app_id from repo name** - always use the 16-character hex hash from the system message
+
+**Correct usage:**
+```
+add_memory(text="...", user_id="james", app_id="abc123def456...")  // Use hash from session message
+```
+
+**WRONG - Do NOT do this:**
+```
+add_memory(text="...", user_id="james", agent_id="my-project")     // WRONG: agent_id instead of app_id
+add_memory(text="...", user_id="james", app_id="my-repo-name")     // WRONG: repo name instead of hash
+```
+
+The `app_id` hash is automatically provided at session start. Look for: `mem0: app_id="<hash>" for project-scoped memories`
+
+**Non-git directories:** If not in a git repo (or no remote configured), no `app_id` will be provided. In this case, omit `app_id` entirely - the memory will be stored globally under `user_id` only.
+
 ## Overview
 
 mem0 provides persistent memory storage with these key capabilities:

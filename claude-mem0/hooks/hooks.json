@@ -1,6 +1,18 @@
 {
   "description": "Memory hooks for automatic capture and retrieval using mem0",
   "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "mcp__plugin_claude-mem0_mem0__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash ${CLAUDE_PLUGIN_ROOT}/hooks/scripts/validate-mem0-call.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
     "SessionStart": [
       {
         "matcher": "*",
