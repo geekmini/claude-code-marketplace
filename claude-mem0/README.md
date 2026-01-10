@@ -55,7 +55,7 @@ All configuration is done via environment variables:
 | **Global** | `user_id` only | User preferences, coding style, personal info |
 | **Project** | `user_id` + `app_id` | Architecture, patterns, project-specific knowledge |
 
-Project ID is automatically derived from your git remote URL (SHA-256 hash), ensuring consistent identification across clones.
+App ID is automatically derived from your git remote URL (SHA-256 hash), ensuring consistent identification across clones.
 
 ### Automatic Hooks
 
@@ -151,7 +151,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 ### No Memories Found
 
 1. Check your `MEM0_API_KEY` is set correctly
-2. Verify `MEM0_USER_ID` matches what was used to store memories
+2. Verify your user ID matches what was used to store memories (defaults to `$USER`)
 3. For project memories, ensure you're in a git repo with a remote
 
 ### Debug Mode
@@ -183,7 +183,8 @@ claude-mem0/
 │   └── mem0-memory/
 │       └── SKILL.md             # Memory best practices
 ├── scripts/
-│   └── get-project-id.sh        # Git remote hash utility
+│   ├── get-user-id.sh           # User identifier utility
+│   └── get-app-id.sh            # Git remote hash utility for app scoping
 └── README.md
 ```
 

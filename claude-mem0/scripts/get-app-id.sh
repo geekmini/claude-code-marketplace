@@ -1,6 +1,6 @@
 #!/bin/bash
-# Get a consistent project identifier from git remote URL
-# Used for scoping project-level memories
+# Get a consistent app identifier from git remote URL
+# Used for scoping app-level memories in mem0
 
 set -euo pipefail
 

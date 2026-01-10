@@ -22,3 +22,4 @@ Browse available plugins and install the one you need:
 
 - **airflow-setup** - Airflow setup and configuration tools
 - **claude-md-sync** - Synchronize CLAUDE.md with current project state
+- **claude-mem0** - Persistent memory for Claude Code using mem0 cloud API
