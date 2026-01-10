@@ -79,27 +79,56 @@ The plugin configures the official [mem0-mcp-server](https://github.com/mem0ai/m
 
 ## Usage Examples
 
-### Manual Memory Operations
+### What to Remember
 
-**Save a preference:**
-> "Remember that I prefer TypeScript over JavaScript"
+| Type | Examples | Scope |
+|------|----------|-------|
+| **Global** | Coding style, preferred tools, personal info | All projects |
+| **Project** | Architecture, tech stack, design decisions | This repo only |
 
-**Recall information:**
-> "What do you know about my coding preferences?"
+### Saving Memories
 
-**Search project history:**
-> "What decisions have we made about the authentication system?"
+**Global memory** (no app_id - accessible everywhere):
+```
+"记住我喜欢用 2 空格缩进"
+"Remember I prefer dark mode in all editors"
+```
 
-**Forget something:**
-> "Forget what I told you about my email address"
+**Project memory** (with app_id - only in this repo):
+```
+"记住这个项目使用 React 18 + TypeScript"
+"Remember this API uses JWT authentication"
+```
 
-### Automatic Capture
+Claude automatically determines the type based on content. To be explicit:
+```
+"保存为全局记忆：我喜欢简洁的代码注释"
+"保存为项目记忆：数据库使用 PostgreSQL 15"
+```
 
-The plugin automatically captures:
-- User preferences discovered during tasks
-- Project architecture decisions
-- Bug fixes and their root causes
-- Important codebase patterns
+### Recalling Memories
+
+```
+"What do you know about my coding preferences?"
+"这个项目用什么技术栈？"
+"What decisions have we made about authentication?"
+```
+
+### Managing Memories
+
+```
+"Forget what I told you about my email"
+"删除关于旧架构的记忆"
+"Show me all memories for this project"
+```
+
+### How Claude Decides
+
+Claude chooses memory type based on content:
+- User preferences, personal info → **Global**
+- Architecture, codebase patterns → **Project**
+
+If info is available via other tools (e.g., `git remote`), Claude may use those instead of memories - this is expected behavior.
 
 ## Privacy
 
@@ -142,20 +171,19 @@ Look for:
 ```
 claude-mem0/
 ├── .claude-plugin/
-│   └── plugin.json          # Plugin manifest
-├── .mcp.json                 # MCP server config (mem0-mcp-server)
+│   └── plugin.json              # Plugin manifest
+├── .mcp.json                    # MCP server config (mem0-mcp-server)
 ├── hooks/
-│   ├── hooks.json            # Hook configuration
-│   ├── scripts/
-│   │   └── on-session-start.sh   # Memory retrieval
-│   └── prompts/
-│       ├── on-stop.md            # Task capture prompt
-│       └── on-session-end.md     # Session summary prompt
+│   ├── hooks.json               # Hook configuration
+│   └── scripts/
+│       ├── on-session-start.sh  # Memory retrieval at session start
+│       ├── on-stop.sh           # Memory capture on task completion
+│       └── on-session-end.sh    # Memory capture on session end
 ├── skills/
 │   └── mem0-memory/
-│       └── SKILL.md          # Memory best practices
+│       └── SKILL.md             # Memory best practices
 ├── scripts/
-│   └── get-project-id.sh     # Git remote hash utility
+│   └── get-project-id.sh        # Git remote hash utility
 └── README.md
 ```
 
