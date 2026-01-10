@@ -6,48 +6,6 @@
   },
   "plugins": [
     {
-      "name": "github-pr-reviewer",
-      "source": "./github-pr-reviewer",
-      "description": "Automated PR code review for GitHub Actions with semantic deduplication and inline comments"
-    },
-    {
-      "name": "local-code-reviewer",
-      "source": "./local-code-reviewer",
-      "description": "Local code review skills for pre-PR review and PR comment resolution. Same criteria as github-pr-reviewer for consistency."
-    },
-    {
-      "name": "ci-test-fixer",
-      "source": "./ci-test-fixer",
-      "description": "Fix failing CI tests and coverage issues from GitHub Actions, then commit and push"
-    },
-    {
-      "name": "dev-flow",
-      "source": "./dev-flow",
-      "description": "Guided 6-phase feature development workflow with session management, parallel agents, and convention detection",
-      "commands": [
-        "./commands/dev.md",
-        "./commands/resume.md",
-        "./commands/status.md"
-      ],
-      "skills": [
-        "./skills/discovery",
-        "./skills/planning",
-        "./skills/specification",
-        "./skills/implementation",
-        "./skills/review",
-        "./skills/delivery",
-        "./skills/swagger",
-        "./skills/postman"
-      ],
-      "agents": [
-        "./agents/code-explorer.md",
-        "./agents/code-architect.md",
-        "./agents/code-reviewer.md",
-        "./agents/code-implementer.md",
-        "./agents/test-implementer.md"
-      ]
-    },
-    {
       "name": "airflow-setup",
       "source": "./airflow-setup",
       "description": "Setup local Apache Airflow environment with Docker Compose",
@@ -71,9 +29,12 @@
       ]
     },
     {
-      "name": "mem0",
-      "source": "./mem0",
-      "description": "Global memory layer for Claude Code using self-hosted Mem0. Automatically stores and retrieves contextual memories across sessions via semantic search."
+      "name": "claude-mem0",
+      "source": "./claude-mem0",
+      "description": "Persistent memory for Claude Code using mem0 cloud API. Automatic global and project-level memory with semantic search.",
+      "skills": [
+        "./skills/mem0-memory"
+      ]
     }
   ]
 }
