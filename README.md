@@ -1,8 +1,8 @@
-# Claude Code Plugins Marketplace 🚀
+# Claude Code Plugins Marketplace
 
-Personal collection of [Claude Code](https://claude.com/claude-code) plugins for automated code reviews.
+Personal collection of [Claude Code](https://claude.com/claude-code) plugins.
 
-## 🚀 Installation
+## Installation
 
 ### 1. Add the Marketplace
 First, add this marketplace to your Claude Code:
@@ -12,16 +12,13 @@ First, add this marketplace to your Claude Code:
 ```
 
 ### 2. Install a Plugin
-Install the recommended skill-based reviewer:
+Browse available plugins and install the one you need:
 
 ```bash
-/plugin install geekmini-claude-code-plugins@code-review-action-builder
+/plugin install <plugin-name>
 ```
 
-## 🛠 Usage
+## Available Plugins
 
-Run the setup command in any repository to configure the review infrastructure:
-
-```bash
-/code-review-action-builder:setup
-```
+- **airflow-setup** - Airflow setup and configuration tools
+- **claude-md-sync** - Synchronize CLAUDE.md with current project state
