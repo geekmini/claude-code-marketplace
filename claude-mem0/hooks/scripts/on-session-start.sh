@@ -10,11 +10,11 @@ PLUGIN_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 # Get app_id using utility script
 APP_ID=$("$PLUGIN_ROOT/scripts/get-app-id.sh")
 
-# Build directive message (user_id is set via MEM0_USER_ID env var)
+# Build informational message (user_id is set via MEM0_USER_ID env var)
 if [ -n "$APP_ID" ]; then
-  MESSAGE="[mem0] REQUIRED: Include app_id=\"${APP_ID}\" in ALL mem0 tool calls (add_memory, search_memories, get_memories). This ensures memories are project-scoped."
+  MESSAGE="[mem0] app_id=\"${APP_ID}\" available for project-scoped memories. Use this app_id ONLY for project-specific memories. Omit app_id for user preferences (global memories)."
 else
-  MESSAGE="[mem0] No app_id available (not in git repo). Memories will be stored globally."
+  MESSAGE="[mem0] No app_id available (not in git repo). All memories will be user-scoped (global)."
 fi
 
 jq -n --arg msg "$MESSAGE" '{"systemMessage": $msg}'
