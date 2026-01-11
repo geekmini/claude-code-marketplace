@@ -25,15 +25,21 @@ Before committing changes to this plugin:
 ### Memory Scoping
 
 - `user_id`: Set via `MEM0_USER_ID` environment variable
-- `app_id`: 16-character hex hash of git remote URL (auto-injected by hook)
+- `app_id`: 16-character hex hash of git remote URL
 
-### PreToolUse Hook
+### How app_id Works
 
-The `validate-mem0-call.sh` hook automatically handles `app_id`:
-- **Auto-injects `app_id`** when in a git repo (Claude doesn't need to specify it)
-- Fixes invalid `app_id` values (repo names instead of hash)
-- Safety fallback: converts `agent_id` to `app_id` if mistakenly used
+**SessionStart hook** provides the `app_id` at session start:
+```
+mem0: app_id="abc123..." for project-scoped memories
+```
 
-**Hook output format** (per Claude Code schema):
-- `decision`: must be `"approve"` or `"block"` (NOT `"allow"`)
-- `updatedInput`: must be nested under `hookSpecificOutput` with `hookEventName: "PreToolUse"`
+**The skill instructs Claude** to ALWAYS include this `app_id` in all mem0 tool calls.
+
+**Note**: PreToolUse hook `updatedInput` does NOT work for MCP tools in Claude Code, so we rely on the skill to instruct Claude to include `app_id` manually.
+
+### PreToolUse Hook (Fallback)
+
+The `validate-mem0-call.sh` hook exists as a safety fallback but does not modify MCP tool inputs:
+- Schema uses `decision: "approve"` and `hookSpecificOutput.updatedInput`
+- Claude Code does not apply `updatedInput` for MCP tools (known limitation)

@@ -8,20 +8,27 @@ version: 0.1.0
 
 Guidance for effectively using mem0 memory tools to provide personalized, context-aware assistance across sessions.
 
-## Automatic Project Scoping
+## CRITICAL: Project Scoping with app_id
 
-**The PreToolUse hook automatically handles `app_id` for you.** You don't need to manually specify it.
+**You MUST always include `app_id` when calling mem0 tools in a git repository.**
 
-- **In a git repo**: The hook auto-injects the correct `app_id` hash
-- **Not in a git repo**: Memories are stored globally under `user_id` only
-
-Simply call memory tools without worrying about `app_id`:
+At session start, you receive a message like:
 ```
-add_memory(text="The API uses Express with middleware chain")
-search_memories(query="API architecture")
+mem0: app_id="abc123def456..." for project-scoped memories
 ```
 
-The hook will automatically add `app_id` when appropriate.
+**ALWAYS use this exact `app_id` value in ALL mem0 tool calls:**
+
+```
+add_memory(text="...", app_id="abc123def456...")
+search_memories(query="...", app_id="abc123def456...")
+get_memories(app_id="abc123def456...")
+```
+
+**Rules:**
+- If `app_id` was provided at session start → ALWAYS include it in every mem0 call
+- If no `app_id` was provided (not in git repo) → omit `app_id` for global memories
+- NEVER omit `app_id` when it was provided - this causes memories to be stored globally instead of project-scoped
 
 ## Overview
 
@@ -49,30 +56,22 @@ The mem0 MCP server provides these tools:
 
 ### Global Memories (User-Level)
 
-Store cross-project preferences and personal information.
-
-**Scope**: Use `user_id` only
+Store cross-project preferences and personal information. Only use when NOT in a git repo (no app_id provided).
 
 **What to store**:
 - Coding style preferences (formatting, naming conventions)
 - Technology preferences (frameworks, tools, libraries)
 - Communication preferences (verbosity, explanation depth)
 - Personal information shared (name, role, expertise)
-- Workflow preferences (commit style, review process)
 
-**Example**:
+**Example** (only when no app_id at session start):
 ```
-add_memory(
-  messages="User prefers TypeScript over JavaScript and uses 2-space indentation",
-  user_id="james"
-)
+add_memory(text="User prefers TypeScript over JavaScript and uses 2-space indentation")
 ```
 
 ### Project Memories (Project-Level)
 
-Store codebase-specific knowledge and decisions.
-
-**Scope**: Use `user_id` + `app_id`
+Store codebase-specific knowledge and decisions. **This is the default when app_id is provided.**
 
 **What to store**:
 - Architecture decisions and rationale
@@ -82,12 +81,11 @@ Store codebase-specific knowledge and decisions.
 - Configuration details and setup steps
 - Dependencies and integration notes
 
-**Example**:
+**Example** (use the app_id from session start):
 ```
 add_memory(
-  messages="The API uses Express with middleware chain: auth -> validate -> handler",
-  user_id="james",
-  app_id="abc123def456"
+  text="The API uses Express with middleware chain: auth -> validate -> handler",
+  app_id="abc123def456..."
 )
 ```
 
@@ -195,16 +193,16 @@ Bad: "Uses JWT"
 
 ## Integration with Hooks
 
-This plugin uses hooks for automatic memory management:
+This plugin uses hooks:
 
-**SessionStart**: Automatically searches and surfaces relevant memories
-**Stop**: Prompts to capture learnings from completed tasks
-**SessionEnd**: Prompts to capture session-level summaries
+**SessionStart**: Provides the `app_id` hash for project-scoped memories. Look for the message:
+```
+mem0: app_id="..." for project-scoped memories
+```
+You MUST use this app_id in all subsequent mem0 tool calls.
 
-The hooks handle routine memory operations. Use manual memory tools for:
-- Explicit user requests ("remember this", "forget that")
-- Immediate capture of important information
-- Memory maintenance (updates, deletions)
+**Stop**: Reminder to capture learnings from completed tasks
+**SessionEnd**: Reminder to capture session-level summaries
 
 ## Troubleshooting
 
@@ -225,11 +223,13 @@ The hooks handle routine memory operations. Use manual memory tools for:
 
 ## Quick Reference
 
-| Goal | Tool | Scope |
-|------|------|-------|
-| Store user preference | `add_memory` | user_id only |
-| Store project knowledge | `add_memory` | user_id + app_id |
-| Find past decisions | `search_memories` | user_id + app_id |
-| Get user preferences | `search_memories` | user_id only |
-| Update outdated info | `update_memory` | Existing memory ID |
-| Remove incorrect info | `delete_memory` | Memory ID |
+**Remember: If app_id was provided at session start, ALWAYS include it in every call.**
+
+| Goal | Tool | Include app_id? |
+|------|------|-----------------|
+| Store project knowledge | `add_memory` | YES (from session start) |
+| Find project decisions | `search_memories` | YES (from session start) |
+| Store global preference | `add_memory` | NO (only if no app_id provided) |
+| Find global preferences | `search_memories` | NO (only if no app_id provided) |
+| Update memory | `update_memory` | Use memory_id |
+| Delete memory | `delete_memory` | Use memory_id |
