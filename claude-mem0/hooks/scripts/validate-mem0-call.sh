@@ -39,6 +39,12 @@ if [ -n "$APP_ID" ]; then
   fi
 fi
 
+# Check 3: No app_id provided but we're in a git repo (auto-inject for project scoping)
+if [ -z "$APP_ID" ] && [ -z "$AGENT_ID" ] && [ -n "$CORRECT_APP_ID" ]; then
+  NEEDS_FIX=true
+  MESSAGES+=("No app_id provided - auto-injecting for project-scoped memory")
+fi
+
 # If no fixes needed, allow the call
 if [ "$NEEDS_FIX" = false ]; then
   echo '{"decision": "allow"}'
