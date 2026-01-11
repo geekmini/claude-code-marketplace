@@ -67,13 +67,12 @@ fi
 SYSTEM_MSG=$(printf '%s\n' "${MESSAGES[@]}" | paste -sd '; ' -)
 
 # Output with auto-fix
+# NOTE: updatedInput must be at top level, NOT nested under hookSpecificOutput
 jq -n \
   --arg msg "mem0 hook: $SYSTEM_MSG" \
   --argjson updated "$UPDATED_INPUT" \
   '{
     "decision": "allow",
-    "hookSpecificOutput": {
-      "updatedInput": $updated
-    },
+    "updatedInput": $updated,
     "systemMessage": $msg
   }'
