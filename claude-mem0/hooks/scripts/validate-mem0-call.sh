@@ -6,7 +6,7 @@
 
 # Error handler - output valid JSON on failure so hook doesn't break
 error_exit() {
-  echo '{"decision": "allow", "systemMessage": "mem0 hook error: '"$1"'"}'
+  echo '{"decision": "approve", "systemMessage": "mem0 hook error: '"$1"'"}'
   exit 0
 }
 
@@ -72,9 +72,9 @@ if [ -z "$APP_ID" ] && [ -z "$AGENT_ID" ] && [ -n "$CORRECT_APP_ID" ]; then
   MESSAGES+=("No app_id provided - auto-injecting for project-scoped memory")
 fi
 
-# If no fixes needed, allow the call
+# If no fixes needed, approve the call as-is
 if [ "$NEEDS_FIX" = false ]; then
-  echo '{"decision": "allow"}'
+  echo '{"decision": "approve"}'
   exit 0
 fi
 
@@ -100,12 +100,15 @@ fi
 SYSTEM_MSG=$(printf '%s\n' "${MESSAGES[@]}" | paste -sd '; ' -)
 
 # Output with auto-fix
-# NOTE: updatedInput must be at top level, NOT nested under hookSpecificOutput
+# Schema requires: decision="approve", updatedInput nested under hookSpecificOutput
 jq -n \
   --arg msg "mem0 hook: $SYSTEM_MSG" \
   --argjson updated "$UPDATED_INPUT" \
   '{
-    "decision": "allow",
-    "updatedInput": $updated,
+    "decision": "approve",
+    "hookSpecificOutput": {
+      "hookEventName": "PreToolUse",
+      "updatedInput": $updated
+    },
     "systemMessage": $msg
   }'

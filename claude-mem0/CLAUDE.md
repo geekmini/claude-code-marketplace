@@ -33,4 +33,7 @@ The `validate-mem0-call.sh` hook automatically handles `app_id`:
 - **Auto-injects `app_id`** when in a git repo (Claude doesn't need to specify it)
 - Fixes invalid `app_id` values (repo names instead of hash)
 - Safety fallback: converts `agent_id` to `app_id` if mistakenly used
-- `updatedInput` must be at top level of response (NOT nested under `hookSpecificOutput`)
+
+**Hook output format** (per Claude Code schema):
+- `decision`: must be `"approve"` or `"block"` (NOT `"allow"`)
+- `updatedInput`: must be nested under `hookSpecificOutput` with `hookEventName: "PreToolUse"`
