@@ -25,12 +25,12 @@ Before committing changes to this plugin:
 ### Memory Scoping
 
 - `user_id`: Set via `MEM0_USER_ID` environment variable
-- `app_id`: 16-character hex hash of git remote URL (for project-scoped memories)
-- Use `app_id` (NOT `agent_id`) for project-level memories
+- `app_id`: 16-character hex hash of git remote URL (auto-injected by hook)
 
 ### PreToolUse Hook
 
-The `validate-mem0-call.sh` hook auto-fixes incorrect mem0 API calls:
-- Replaces `agent_id` with `app_id`
-- Replaces invalid `app_id` (repo names) with correct hash
+The `validate-mem0-call.sh` hook automatically handles `app_id`:
+- **Auto-injects `app_id`** when in a git repo (Claude doesn't need to specify it)
+- Fixes invalid `app_id` values (repo names instead of hash)
+- Safety fallback: converts `agent_id` to `app_id` if mistakenly used
 - `updatedInput` must be at top level of response (NOT nested under `hookSpecificOutput`)
