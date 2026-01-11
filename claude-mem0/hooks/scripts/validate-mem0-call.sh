@@ -4,6 +4,15 @@
 # - Fixes invalid app_id values (repo names instead of hash)
 # - Safety fallback: converts agent_id to app_id if mistakenly used
 
+# Error handler - output valid JSON on failure so hook doesn't break
+error_exit() {
+  echo '{"decision": "allow", "systemMessage": "mem0 hook error: '"$1"'"}'
+  exit 0
+}
+
+# Trap errors
+trap 'error_exit "unexpected error at line $LINENO"' ERR
+
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -12,8 +21,24 @@ PLUGIN_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 # Read input from stdin
 INPUT=$(cat)
 
-# Extract tool input
-TOOL_INPUT=$(echo "$INPUT" | jq -r '.tool_input // "{}"')
+# Validate we got input
+if [ -z "$INPUT" ]; then
+  error_exit "no input received"
+fi
+
+# Extract tool input - handle both object and string formats
+TOOL_INPUT_RAW=$(echo "$INPUT" | jq '.tool_input // {}')
+# If tool_input is a string (already JSON-encoded), parse it; otherwise use as-is
+if echo "$TOOL_INPUT_RAW" | jq -e 'type == "string"' >/dev/null 2>&1; then
+  TOOL_INPUT=$(echo "$TOOL_INPUT_RAW" | jq -r '.' | jq '.')
+else
+  TOOL_INPUT="$TOOL_INPUT_RAW"
+fi
+
+# Validate tool_input is valid JSON object
+if ! echo "$TOOL_INPUT" | jq -e 'type == "object"' >/dev/null 2>&1; then
+  error_exit "tool_input is not a valid JSON object"
+fi
 
 # Get current values
 AGENT_ID=$(echo "$TOOL_INPUT" | jq -r '.agent_id // empty')
