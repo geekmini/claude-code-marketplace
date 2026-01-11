@@ -1,6 +1,8 @@
 #!/bin/bash
-# PreToolUse hook: Validate and auto-fix mem0 MCP calls
-# Ensures project-scoped memories use app_id (not agent_id) with correct hash
+# PreToolUse hook: Auto-inject app_id for project-scoped memories
+# - Auto-injects app_id when in a git repo (so Claude doesn't need to specify it)
+# - Fixes invalid app_id values (repo names instead of hash)
+# - Safety fallback: converts agent_id to app_id if mistakenly used
 
 set -euo pipefail
 
@@ -37,6 +39,12 @@ if [ -n "$APP_ID" ]; then
     NEEDS_FIX=true
     MESSAGES+=("Detected app_id=\"$APP_ID\" - should be 16-char hex hash, not repo name")
   fi
+fi
+
+# Check 3: No app_id provided but we're in a git repo (auto-inject for project scoping)
+if [ -z "$APP_ID" ] && [ -z "$AGENT_ID" ] && [ -n "$CORRECT_APP_ID" ]; then
+  NEEDS_FIX=true
+  MESSAGES+=("No app_id provided - auto-injecting for project-scoped memory")
 fi
 
 # If no fixes needed, allow the call
